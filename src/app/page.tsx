@@ -138,6 +138,40 @@ const navItems = [
   },
 ]
 
+function MobileMenu() {
+  const [open, setOpen] = useState(false)
+  return (
+    <div className="relative">
+      <button onClick={() => setOpen(!open)} className="p-2 rounded-lg hover:bg-stone-50 transition">
+        {open ? (
+          <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
+            <path d="M5 5l10 10M15 5L5 15" stroke="#1c1917" strokeWidth="1.5" strokeLinecap="round"/>
+          </svg>
+        ) : (
+          <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
+            <path d="M3 6h14M3 10h14M3 14h14" stroke="#1c1917" strokeWidth="1.5" strokeLinecap="round"/>
+          </svg>
+        )}
+      </button>
+      {open && (
+        <div className="absolute right-0 top-full mt-2 w-56 bg-white rounded-2xl border border-stone-100 shadow-xl p-3 z-50">
+          {[
+            { label: 'How it works', href: '#how-it-works' },
+            { label: 'Features', href: '#features' },
+            { label: 'Pricing', href: '/pricing' },
+            { label: 'Enterprise', href: '/enterprise' },
+            { label: 'Log in', href: '/login' },
+          ].map(({ label, href }) => (
+            <Link key={label} href={href} onClick={() => setOpen(false)} className="block px-4 py-2.5 text-sm text-stone-600 hover:bg-stone-50 rounded-xl transition">
+              {label}
+            </Link>
+          ))}
+        </div>
+      )}
+    </div>
+  )
+}
+
 export default function Home() {
   useScrollReveal()
   const [activeTab, setActiveTab] = useState('Study Plan')
@@ -181,6 +215,20 @@ export default function Home() {
         .reveal-delay-1 { transition-delay: 0.1s; }
         .reveal-delay-2 { transition-delay: 0.2s; }
         .reveal-delay-3 { transition-delay: 0.3s; }
+
+        @media (max-width: 768px) {
+        .desktop-nav { display: none !important; }
+        .mobile-nav { display: flex !important; }
+        .hero-title { font-size: 42px !important; }
+        .hero-sub { font-size: 16px !important; }
+        .hero-btns { flex-direction: column !important; align-items: stretch !important; }
+        .grid-3 { grid-template-columns: 1fr !important; }
+        .grid-2 { grid-template-columns: 1fr !important; }
+        .mockup-sidebar { display: none !important; }
+        .mockup-cols { grid-template-columns: 1fr !important; }
+        .section-pad { padding: 48px 20px !important; }
+        .footer-row { flex-direction: column !important; gap: 16px !important; }
+      }
       `}</style>
 
       <main className="min-h-screen bg-white" style={{ fontFamily: "'Inter', sans-serif" }}>
@@ -188,11 +236,10 @@ export default function Home() {
         {/* Nav */}
         <nav className="sticky top-0 z-50 bg-white/90 backdrop-blur-md border-b border-stone-100">
           <div className="flex items-center justify-between px-8 py-3.5 max-w-7xl mx-auto relative">
-            {/* Logo */}
             <span className="brand text-xl text-stone-900">Guideway</span>
 
-            {/* Center tabs */}
-            <div className="absolute left-1/2 -translate-x-1/2 flex items-center gap-1">
+            {/* Desktop center tabs */}
+            <div className="desktop-nav absolute left-1/2 -translate-x-1/2 flex items-center gap-1">
               {navItems.map(({ label, items }) => (
                 <div key={label} className="relative group">
                   <button className="flex items-center gap-1 px-3 py-2 text-sm text-stone-500 hover:text-stone-900 transition rounded-lg hover:bg-stone-50">
@@ -226,14 +273,22 @@ export default function Home() {
               </Link>
             </div>
 
-            {/* Right side */}
-            <div className="flex items-center gap-3">
+            {/* Desktop right */}
+            <div className="desktop-nav flex items-center gap-3">
               <Link href="/login" className="text-sm text-stone-500 hover:text-stone-900 transition px-3 py-2 rounded-lg hover:bg-stone-50">
                 Log in
               </Link>
               <Link href="/signup" className="text-sm bg-stone-900 text-white px-4 py-2 rounded-lg hover:bg-stone-700 transition font-medium">
                 Get Guideway free
               </Link>
+            </div>
+
+            {/* Mobile nav */}
+            <div className="mobile-nav hidden items-center gap-3">
+              <Link href="/signup" className="text-sm bg-[#4a7c59] text-white px-4 py-2 rounded-lg font-medium">
+                Get started
+              </Link>
+              <MobileMenu />
             </div>
           </div>
         </nav>
