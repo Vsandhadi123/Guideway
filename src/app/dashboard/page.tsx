@@ -15,17 +15,18 @@ export default function Dashboard() {
   const [plan, setPlan] = useState<any>(null)
   const [loading, setLoading] = useState(true)
   const [tasks, setTasks] = useState<Record<string, boolean>>({})
+  const [opportunities, setOpportunities] = useState<any>(null)
 
   useEffect(() => {
     async function load() {
       const { data: { user } } = await supabase.auth.getUser()
       if (!user) { router.push('/login'); return }
       setUser(user)
-
       const { data } = await supabase.from('profiles').select('*').eq('id', user.id).single()
       setProfile(data)
       if (data?.plan) setPlan(data.plan)
       if (data?.roadmap) setRoadmap(data.roadmap)
+      if (data?.opportunities) setOpportunities(data.opportunities)
       setLoading(false)
     }
     load()
@@ -60,7 +61,7 @@ export default function Dashboard() {
   const name = user?.user_metadata?.full_name?.split(' ')[0] || 'there'
   const hasAnswers = profile?.answers
   const schedule: string[] = plan?.schedule || []
-  const opportunities: string[] = plan?.opportunities || []
+  const planOpportunities: string[] = plan?.opportunities || []
   const goals: string[] = plan?.goals || []
   const completedTasks = Object.values(tasks).filter(Boolean).length
   const totalTasks = schedule.length
@@ -73,16 +74,13 @@ export default function Dashboard() {
         .brand { font-family: 'Fraunces', serif; }
       `}</style>
 
-      {/* Nav */}
       <nav className="bg-white border-b border-stone-100 flex items-center justify-between px-10 py-4 sticky top-0 z-50">
         <span className="brand text-2xl text-stone-900">Guideway</span>
         <div className="flex items-center gap-6">
           <button onClick={() => router.push('/plan')} className="text-sm text-stone-400 hover:text-stone-700 transition">My Plan</button>
+          <button onClick={() => router.push('/opportunities')} className="text-sm text-stone-400 hover:text-stone-700 transition">Opportunities</button>
           <button onClick={() => router.push('/onboarding')} className="text-sm text-stone-400 hover:text-stone-700 transition">Rebuild Plan</button>
-          <button
-            onClick={async () => { await supabase.auth.signOut(); router.push('/') }}
-            className="text-sm text-stone-400 hover:text-stone-700 transition"
-          >Sign out</button>
+          <button onClick={async () => { await supabase.auth.signOut(); router.push('/') }} className="text-sm text-stone-400 hover:text-stone-700 transition">Sign out</button>
         </div>
       </nav>
 
@@ -90,15 +88,11 @@ export default function Dashboard() {
         <div className="max-w-2xl mx-auto px-10 py-32 text-center">
           <h1 className="brand text-5xl text-stone-900 mb-4">Welcome, {name}!</h1>
           <p className="text-stone-400 mb-8">You haven't built your plan yet. It takes 2 minutes.</p>
-          <button
-            onClick={() => router.push('/onboarding')}
-            className="bg-[#4a7c59] text-white px-8 py-4 rounded-xl font-semibold hover:bg-[#3d6849] transition"
-          >Build my plan →</button>
+          <button onClick={() => router.push('/onboarding')} className="bg-[#4a7c59] text-white px-8 py-4 rounded-xl font-semibold hover:bg-[#3d6849] transition">Build my plan →</button>
         </div>
       ) : (
         <div className="max-w-5xl mx-auto px-10 py-10">
 
-          {/* Header */}
           <div className="mb-10">
             <h1 className="brand text-4xl text-stone-900">Hey, {name} 👋</h1>
             <p className="text-stone-400 mt-1 text-sm">Here's your Guideway dashboard.</p>
@@ -109,7 +103,7 @@ export default function Dashboard() {
             {/* Left column */}
             <div className="col-span-2 flex flex-col gap-6">
 
-              {/* Weekly check-in prompt */}
+              {/* Weekly check-in */}
               <div className="bg-[#4a7c59] rounded-2xl p-6 text-white">
                 <div className="flex items-center justify-between">
                   <div>
@@ -117,10 +111,7 @@ export default function Dashboard() {
                     <h2 className="brand text-2xl mb-1">How's your week going?</h2>
                     <p className="text-green-200 text-sm">Update your plan based on how things are going.</p>
                   </div>
-                  <button
-                    onClick={() => router.push('/checkin')}
-                    className="flex-shrink-0 ml-6 bg-white text-[#4a7c59] px-5 py-2.5 rounded-xl text-sm font-semibold hover:bg-green-50 transition"
-                  >
+                  <button onClick={() => router.push('/checkin')} className="flex-shrink-0 ml-6 bg-white text-[#4a7c59] px-5 py-2.5 rounded-xl text-sm font-semibold hover:bg-green-50 transition">
                     Check in →
                   </button>
                 </div>
@@ -137,7 +128,6 @@ export default function Dashboard() {
                     <span className="text-xs text-stone-400">{completedTasks}/{totalTasks}</span>
                   </div>
                 </div>
-
                 {schedule.length === 0 ? (
                   <p className="text-sm text-stone-300">No schedule yet — generate your plan first.</p>
                 ) : (
@@ -146,17 +136,9 @@ export default function Dashboard() {
                       const key = `task-${i}`
                       const done = tasks[key]
                       return (
-                        <div
-                          key={i}
-                          onClick={() => toggleTask(key)}
-                          className={`flex items-center gap-3 p-3 rounded-xl cursor-pointer transition-all ${done ? 'bg-[#f0f5f1]' : 'bg-stone-50 hover:bg-stone-100'}`}
-                        >
+                        <div key={i} onClick={() => toggleTask(key)} className={`flex items-center gap-3 p-3 rounded-xl cursor-pointer transition-all ${done ? 'bg-[#f0f5f1]' : 'bg-stone-50 hover:bg-stone-100'}`}>
                           <div className={`w-5 h-5 rounded-full border-2 flex-shrink-0 flex items-center justify-center transition-all ${done ? 'bg-[#4a7c59] border-[#4a7c59]' : 'border-stone-200'}`}>
-                            {done && (
-                              <svg width="10" height="10" viewBox="0 0 10 10" fill="none">
-                                <path d="M2 5l2 2 4-4" stroke="white" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
-                              </svg>
-                            )}
+                            {done && <svg width="10" height="10" viewBox="0 0 10 10" fill="none"><path d="M2 5l2 2 4-4" stroke="white" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/></svg>}
                           </div>
                           <p className={`text-sm transition-all ${done ? 'text-stone-400 line-through' : 'text-stone-700'}`}>{item}</p>
                         </div>
@@ -164,45 +146,44 @@ export default function Dashboard() {
                     })}
                   </div>
                 )}
-
-                {plan && (
-                  <button
-                    onClick={() => router.push('/plan')}
-                    className="mt-4 text-xs text-[#4a7c59] font-medium hover:underline"
-                  >
-                    View full plan →
-                  </button>
-                )}
+                {plan && <button onClick={() => router.push('/plan')} className="mt-4 text-xs text-[#4a7c59] font-medium hover:underline">View full plan →</button>}
               </div>
 
               {/* Opportunities */}
               <div className="bg-white rounded-2xl border border-stone-100 p-6">
-                <h2 className="text-base font-semibold text-stone-900 mb-5">Upcoming opportunities</h2>
-                {opportunities.length === 0 ? (
-                  <p className="text-sm text-stone-300">Generate your plan to see opportunities.</p>
+                <div className="flex items-center justify-between mb-5">
+                  <h2 className="text-base font-semibold text-stone-900">Opportunities</h2>
+                  <button onClick={() => router.push('/opportunities')} className="text-xs text-[#4a7c59] font-medium hover:underline">View all →</button>
+                </div>
+                {!opportunities ? (
+                  <div className="text-center py-6 bg-stone-50 rounded-xl border border-stone-100">
+                    <p className="text-sm text-stone-400 mb-3">No opportunities generated yet.</p>
+                    <button onClick={() => router.push('/opportunities')} className="text-xs font-semibold text-[#4a7c59] border border-[#d4e4d9] bg-[#f0f5f1] px-3 py-1.5 rounded-lg hover:bg-[#e0ede4] transition">
+                      Find my opportunities →
+                    </button>
+                  </div>
                 ) : (
                   <div className="flex flex-col gap-3">
-                    {opportunities.map((item: string, i: number) => (
+                    {opportunities.competitions?.slice(0, 2).map((item: any, i: number) => (
                       <div key={i} className="flex gap-3 p-3 rounded-xl bg-stone-50 border border-stone-100">
                         <div className="w-1.5 h-1.5 rounded-full bg-[#4a7c59] mt-1.5 flex-shrink-0" />
-                        <p className="text-sm text-stone-600">{item}</p>
+                        <div>
+                          <p className="text-xs font-semibold text-stone-700">{item.name}</p>
+                          <p className="text-xs text-stone-400 mt-0.5">{item.desc?.slice(0, 60)}...</p>
+                        </div>
                       </div>
                     ))}
+                    <button onClick={() => router.push('/opportunities')} className="text-xs text-[#4a7c59] font-medium text-center mt-1 hover:underline">See all opportunities →</button>
                   </div>
                 )}
               </div>
-            </div>
 
-            {/* College Roadmap */}
+              {/* College Roadmap */}
               <div className="bg-white rounded-2xl border border-stone-100 p-6">
                 <div className="flex items-center justify-between mb-5">
                   <h2 className="text-base font-semibold text-stone-900">College roadmap</h2>
                   {!roadmap && (
-                    <button
-                      onClick={generateRoadmap}
-                      disabled={roadmapLoading}
-                      className="text-xs font-semibold text-[#4a7c59] border border-[#d4e4d9] bg-[#f0f5f1] px-3 py-1.5 rounded-lg hover:bg-[#e0ede4] transition disabled:opacity-40"
-                    >
+                    <button onClick={generateRoadmap} disabled={roadmapLoading} className="text-xs font-semibold text-[#4a7c59] border border-[#d4e4d9] bg-[#f0f5f1] px-3 py-1.5 rounded-lg hover:bg-[#e0ede4] transition disabled:opacity-40">
                       {roadmapLoading ? 'Generating...' : 'Generate roadmap →'}
                     </button>
                   )}
@@ -224,29 +205,18 @@ export default function Dashboard() {
 
                 {roadmap && (
                   <div>
-                    {/* Year tabs */}
-                    <div className="flex gap-1 mb-5 border-b border-stone-100 pb-0">
+                    <div className="flex gap-1 mb-5 border-b border-stone-100">
                       {roadmap.timeline?.map(({ year }: any) => (
-                        <button
-                          key={year}
-                          onClick={() => setActiveYear(year)}
-                          className={`px-3 py-2 text-xs font-semibold transition border-b-2 -mb-px ${
-                            activeYear === year
-                              ? 'text-[#4a7c59] border-[#4a7c59]'
-                              : 'text-stone-400 border-transparent hover:text-stone-600'
-                          }`}
-                        >
+                        <button key={year} onClick={() => setActiveYear(year)} className={`px-3 py-2 text-xs font-semibold transition border-b-2 -mb-px ${activeYear === year ? 'text-[#4a7c59] border-[#4a7c59]' : 'text-stone-400 border-transparent hover:text-stone-600'}`}>
                           {year}
                         </button>
                       ))}
                     </div>
-
-                    {/* Active year content */}
-                    {roadmap.timeline?.filter((t: any) => t.year === activeYear).map(({ theme, tasks }: any) => (
+                    {roadmap.timeline?.filter((t: any) => t.year === activeYear).map(({ theme, tasks: yearTasks }: any) => (
                       <div key={activeYear} className="mb-5">
                         <p className="text-xs font-semibold text-[#4a7c59] mb-3 italic">{theme}</p>
                         <div className="flex flex-col gap-2">
-                          {tasks?.map((task: string, i: number) => (
+                          {yearTasks?.map((task: string, i: number) => (
                             <div key={i} className="flex items-start gap-2.5 text-sm text-stone-600">
                               <span className="text-[#4a7c59] mt-0.5 flex-shrink-0">→</span>
                               <span>{task}</span>
@@ -255,8 +225,6 @@ export default function Dashboard() {
                         </div>
                       </div>
                     ))}
-
-                    {/* Current checklist */}
                     <div className="mt-5 pt-5 border-t border-stone-100">
                       <p className="text-xs font-bold text-stone-400 uppercase tracking-widest mb-3">Do this now</p>
                       <div className="flex flex-col gap-2">
@@ -268,8 +236,6 @@ export default function Dashboard() {
                         ))}
                       </div>
                     </div>
-
-                    {/* Test prep */}
                     {roadmap.test_prep && (
                       <div className="mt-4 pt-4 border-t border-stone-100">
                         <p className="text-xs font-bold text-stone-400 uppercase tracking-widest mb-2">Test prep targets</p>
@@ -290,6 +256,8 @@ export default function Dashboard() {
                 )}
               </div>
 
+            </div>
+
             {/* Right column */}
             <div className="flex flex-col gap-6">
 
@@ -309,10 +277,7 @@ export default function Dashboard() {
                     </div>
                   ))}
                 </div>
-                <button
-                  onClick={() => router.push('/onboarding')}
-                  className="mt-4 w-full text-xs text-stone-400 border border-stone-100 py-2 rounded-lg hover:border-stone-200 transition"
-                >
+                <button onClick={() => router.push('/onboarding')} className="mt-4 w-full text-xs text-stone-400 border border-stone-100 py-2 rounded-lg hover:border-stone-200 transition">
                   Update profile
                 </button>
               </div>
@@ -326,14 +291,9 @@ export default function Dashboard() {
                   <div className="flex flex-col gap-4">
                     {goals.map((goal: string, i: number) => (
                       <div key={i}>
-                        <div className="flex items-center justify-between mb-1.5">
-                          <p className="text-xs text-stone-500 leading-snug pr-2">{goal.length > 50 ? goal.slice(0, 50) + '...' : goal}</p>
-                        </div>
+                        <p className="text-xs text-stone-500 leading-snug pr-2 mb-1.5">{goal.length > 50 ? goal.slice(0, 50) + '...' : goal}</p>
                         <div className="w-full bg-stone-100 rounded-full h-1">
-                          <div
-                            className="bg-[#4a7c59] h-1 rounded-full"
-                            style={{ width: `${[15, 35, 10][i] || 20}%` }}
-                          />
+                          <div className="bg-[#4a7c59] h-1 rounded-full" style={{ width: `${[15, 35, 10][i] || 20}%` }} />
                         </div>
                         <p className="text-[10px] text-stone-300 mt-1">{[15, 35, 10][i] || 20}% complete</p>
                       </div>
@@ -348,13 +308,11 @@ export default function Dashboard() {
                 <div className="flex flex-col gap-2">
                   {[
                     { label: 'View full plan', href: '/plan' },
+                    { label: 'Find opportunities', href: '/opportunities' },
                     { label: 'Rebuild my plan', href: '/onboarding' },
+                    { label: 'Weekly check-in', href: '/checkin' },
                   ].map(({ label, href }) => (
-                    <button
-                      key={label}
-                      onClick={() => router.push(href)}
-                      className="w-full text-left text-sm text-stone-600 px-3 py-2.5 rounded-lg hover:bg-stone-50 transition flex items-center justify-between"
-                    >
+                    <button key={label} onClick={() => router.push(href)} className="w-full text-left text-sm text-stone-600 px-3 py-2.5 rounded-lg hover:bg-stone-50 transition flex items-center justify-between">
                       {label}
                       <svg width="14" height="14" viewBox="0 0 14 14" fill="none">
                         <path d="M3 7h8M7 3l4 4-4 4" stroke="#d4d0c8" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>

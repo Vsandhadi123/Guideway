@@ -46,7 +46,27 @@ Return a JSON object with exactly these keys:
 
 Be specific to their grade and goals. Return only valid JSON, no markdown, no explanation.`
 
-  const prompt = type === 'roadmap' ? roadmapPrompt : planPrompt
+  const opportunitiesPrompt = `You are Guideway, an AI high school success coach.
+Generate personalized opportunities for this student.
+
+Student Profile:
+- Grade: ${answers.grade}
+- GPA: ${answers.gpa}
+- Goals: ${answers.goals?.join(', ')}
+- Interests: ${answers.interests}
+
+Return a JSON object with exactly these keys:
+1. "competitions" - array of 3 objects, each with "name", "desc", "deadline", "link_hint"
+2. "internships" - array of 3 objects, each with "name", "desc", "deadline", "link_hint"
+3. "clubs" - array of 3 objects, each with "name", "desc", "commitment", "link_hint"
+4. "scholarships" - array of 3 objects, each with "name", "desc", "amount", "link_hint"
+5. "volunteer" - array of 2 objects, each with "name", "desc", "commitment", "link_hint"
+6. "summer" - array of 2 objects, each with "name", "desc", "deadline", "link_hint"
+
+Be specific to their grade, interests, and goals. Reference real programs where possible.
+Return only valid JSON, no markdown, no explanation.`
+
+  const prompt = type === 'roadmap' ? roadmapPrompt : type === 'opportunities' ? opportunitiesPrompt : planPrompt
 
   try {
     const res = await fetch('https://openrouter.ai/api/v1/chat/completions', {
