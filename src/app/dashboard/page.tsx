@@ -88,6 +88,7 @@ export default function Dashboard() {
             </button>
             <div className="absolute right-0 top-full mt-2 w-44 bg-white rounded-2xl border border-stone-100 shadow-xl p-2 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 z-50">
               <p className="px-3 py-2 text-xs text-stone-400 border-b border-stone-50 mb-1">{user?.email}</p>
+              <button onClick={() => router.push('/tools')} className="w-full text-left px-3 py-2 text-sm text-stone-600 hover:bg-stone-50 rounded-xl transition">Study Tools</button>
               <button onClick={() => router.push('/settings')} className="w-full text-left px-3 py-2 text-sm text-stone-600 hover:bg-stone-50 rounded-xl transition">Settings</button>
               <button onClick={async () => { await supabase.auth.signOut(); router.push('/') }} className="w-full text-left px-3 py-2 text-sm text-red-400 hover:bg-red-50 rounded-xl transition">Sign out</button>
             </div>
