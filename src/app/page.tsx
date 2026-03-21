@@ -110,30 +110,30 @@ const navItems = [
   {
     label: 'Product',
     items: [
-      { title: 'AI Study Plan', desc: 'Personalized study strategies', icon: '📚' },
-      { title: 'Weekly Schedule', desc: 'Built around your life', icon: '🗓' },
-      { title: 'Extracurriculars', desc: 'Matched to your interests', icon: '🏅' },
-      { title: 'College Roadmap', desc: 'Step-by-step milestones', icon: '🎓' },
-      { title: 'Mental Health', desc: 'Stress built into your plan', icon: '🧠' },
-      { title: 'Weekly Check-ins', desc: 'Plan that adapts to you', icon: '✅' },
+      { title: 'AI Study Plan', desc: 'Personalized study strategies', icon: '📚', href: '/features/ai-study-plan' },
+      { title: 'Weekly Schedule', desc: 'Built around your life', icon: '🗓', href: '/features/weekly-schedule' },
+      { title: 'Extracurriculars', desc: 'Matched to your interests', icon: '🏅', href: '/features/extracurriculars' },
+      { title: 'College Roadmap', desc: 'Step-by-step milestones', icon: '🎓', href: '/features/college-roadmap' },
+      { title: 'Mental Health', desc: 'Stress built into your plan', icon: '🧠', href: '/features/mental-health' },
+      { title: 'Weekly Check-ins', desc: 'Plan that adapts to you', icon: '✅', href: '/features/weekly-checkins' },
     ]
   },
   {
     label: 'Solutions',
     items: [
-      { title: '9th Grade', desc: 'Build habits early', icon: '🌱' },
-      { title: '10th Grade', desc: 'Find your direction', icon: '🧭' },
-      { title: '11th Grade', desc: 'The year that matters most', icon: '⚡' },
-      { title: '12th Grade', desc: 'Finish strong', icon: '🏁' },
-      { title: 'Top University Track', desc: 'Competitive college prep', icon: '🏛' },
-      { title: 'Trade & Vocational', desc: 'Alternative pathways', icon: '🔧' },
+      { title: '9th Grade', desc: 'Build habits early', icon: '🌱', href: '/solutions/9th-grade' },
+      { title: '10th Grade', desc: 'Find your direction', icon: '🧭', href: '/solutions/10th-grade' },
+      { title: '11th Grade', desc: 'The year that matters most', icon: '⚡', href: '/solutions/11th-grade' },
+      { title: '12th Grade', desc: 'Finish strong', icon: '🏁', href: '/solutions/12th-grade' },
+      { title: 'Top University Track', desc: 'Competitive college prep', icon: '🏛', href: '/solutions/top-university' },
+      { title: 'Trade & Vocational', desc: 'Alternative pathways', icon: '🔧', href: '/solutions/trade-vocational' },
     ]
   },
   {
     label: 'Resources',
     items: [
-      { title: 'FAQ', desc: 'Common questions answered', icon: '💬' },
-      { title: 'Contact', desc: 'Get in touch with us', icon: '✉️' },
+      { title: 'FAQ', desc: 'Common questions answered', icon: '💬', href: '/faq' },
+      { title: 'Contact', desc: 'Get in touch with us', icon: '✉️', href: '/contact' },
     ]
   },
 ]
@@ -250,8 +250,8 @@ export default function Home() {
                   </button>
                   <div className="absolute top-full left-0 mt-1 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 translate-y-1 group-hover:translate-y-0 z-50">
                     <div className="bg-white rounded-2xl border border-stone-100 shadow-xl shadow-stone-200/60 p-3 w-64">
-                      {items.map(({ title, desc, icon }) => (
-                        <div key={title} className="flex items-center gap-3 px-3 py-2.5 rounded-xl hover:bg-stone-50 cursor-pointer transition group/item">
+                      {items.map(({ title, desc, icon, href }) => (
+                        <Link key={title} href={href || '#'} className="flex items-center gap-3 px-3 py-2.5 rounded-xl hover:bg-stone-50 cursor-pointer transition group/item">
                           <div className="w-8 h-8 rounded-lg bg-[#f0f5f1] border border-[#d4e4d9] flex items-center justify-center flex-shrink-0 group-hover/item:bg-[#4a7c59] transition-colors">
                             <span className="text-sm">{icon}</span>
                           </div>
@@ -259,7 +259,7 @@ export default function Home() {
                             <span className="text-sm font-semibold text-stone-800 group-hover/item:text-[#4a7c59] transition block">{title}</span>
                             <span className="text-xs text-stone-400">{desc}</span>
                           </div>
-                        </div>
+                        </Link>
                       ))}
                     </div>
                   </div>
