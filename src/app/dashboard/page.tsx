@@ -81,6 +81,7 @@ export default function Dashboard() {
           <button onClick={() => router.push('/opportunities')} className="text-sm text-stone-400 hover:text-stone-700 transition">Opportunities</button>
           <button onClick={() => router.push('/checkin')} className="text-sm text-stone-400 hover:text-stone-700 transition">Check in</button>
           <button onClick={() => router.push('/onboarding')} className="text-sm text-stone-400 hover:text-stone-700 transition">Rebuild Plan</button>
+          <button onClick={() => router.push('/tools')} className="text-sm text-stone-400 hover:text-stone-700 transition">Tools</button>
           <div className="relative group">
             <button className="w-8 h-8 rounded-full bg-[#4a7c59] flex items-center justify-center text-white text-xs font-bold hover:bg-[#3d6849] transition">
               {name?.charAt(0).toUpperCase()}
