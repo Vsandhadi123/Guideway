@@ -30,7 +30,7 @@ export default function Signup() {
       setError(error.message)
       setLoading(false)
     } else {
-      router.push('/onboarding')
+      router.push('/confirm-email')
     }
   }
 
