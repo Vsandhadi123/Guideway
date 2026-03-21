@@ -98,7 +98,7 @@ export default function Dashboard() {
                     <p className="text-green-200 text-sm">Update your plan based on how things are going.</p>
                   </div>
                   <button
-                    onClick={() => router.push('/onboarding')}
+                    onClick={() => router.push('/checkin')}
                     className="flex-shrink-0 ml-6 bg-white text-[#4a7c59] px-5 py-2.5 rounded-xl text-sm font-semibold hover:bg-green-50 transition"
                   >
                     Check in →
