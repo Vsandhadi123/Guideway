@@ -5,6 +5,9 @@ import { useRouter } from 'next/navigation'
 import { createClient } from '@/lib/supabase'
 
 export default function Dashboard() {
+  const [roadmap, setRoadmap] = useState<any>(null)
+  const [roadmapLoading, setRoadmapLoading] = useState(false)
+  const [activeYear, setActiveYear] = useState('9th Grade')
   const router = useRouter()
   const supabase = createClient()
   const [user, setUser] = useState<any>(null)
@@ -22,6 +25,7 @@ export default function Dashboard() {
       const { data } = await supabase.from('profiles').select('*').eq('id', user.id).single()
       setProfile(data)
       if (data?.plan) setPlan(data.plan)
+      if (data?.roadmap) setRoadmap(data.roadmap)
       setLoading(false)
     }
     load()
@@ -29,6 +33,22 @@ export default function Dashboard() {
 
   function toggleTask(key: string) {
     setTasks(prev => ({ ...prev, [key]: !prev[key] }))
+  }
+
+  async function generateRoadmap() {
+    setRoadmapLoading(true)
+    const res = await fetch('/api/generate', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ answers: profile.answers, type: 'roadmap' })
+    })
+    const data = await res.json()
+    if (!data.error) {
+      setRoadmap(data)
+      const { data: { user } } = await supabase.auth.getUser()
+      if (user) await supabase.from('profiles').update({ roadmap: data }).eq('id', user.id)
+    }
+    setRoadmapLoading(false)
   }
 
   if (loading) return (
@@ -172,6 +192,103 @@ export default function Dashboard() {
                 )}
               </div>
             </div>
+
+            {/* College Roadmap */}
+              <div className="bg-white rounded-2xl border border-stone-100 p-6">
+                <div className="flex items-center justify-between mb-5">
+                  <h2 className="text-base font-semibold text-stone-900">College roadmap</h2>
+                  {!roadmap && (
+                    <button
+                      onClick={generateRoadmap}
+                      disabled={roadmapLoading}
+                      className="text-xs font-semibold text-[#4a7c59] border border-[#d4e4d9] bg-[#f0f5f1] px-3 py-1.5 rounded-lg hover:bg-[#e0ede4] transition disabled:opacity-40"
+                    >
+                      {roadmapLoading ? 'Generating...' : 'Generate roadmap →'}
+                    </button>
+                  )}
+                </div>
+
+                {!roadmap && !roadmapLoading && (
+                  <div className="text-center py-8 bg-stone-50 rounded-xl border border-stone-100">
+                    <p className="text-sm text-stone-400 mb-1">Your college roadmap is ready to generate.</p>
+                    <p className="text-xs text-stone-300">Based on your grade and goals.</p>
+                  </div>
+                )}
+
+                {roadmapLoading && (
+                  <div className="text-center py-8">
+                    <div className="w-6 h-6 border-2 border-[#4a7c59] border-t-transparent rounded-full animate-spin mx-auto mb-3" />
+                    <p className="text-xs text-stone-400">Building your roadmap...</p>
+                  </div>
+                )}
+
+                {roadmap && (
+                  <div>
+                    {/* Year tabs */}
+                    <div className="flex gap-1 mb-5 border-b border-stone-100 pb-0">
+                      {roadmap.timeline?.map(({ year }: any) => (
+                        <button
+                          key={year}
+                          onClick={() => setActiveYear(year)}
+                          className={`px-3 py-2 text-xs font-semibold transition border-b-2 -mb-px ${
+                            activeYear === year
+                              ? 'text-[#4a7c59] border-[#4a7c59]'
+                              : 'text-stone-400 border-transparent hover:text-stone-600'
+                          }`}
+                        >
+                          {year}
+                        </button>
+                      ))}
+                    </div>
+
+                    {/* Active year content */}
+                    {roadmap.timeline?.filter((t: any) => t.year === activeYear).map(({ theme, tasks }: any) => (
+                      <div key={activeYear} className="mb-5">
+                        <p className="text-xs font-semibold text-[#4a7c59] mb-3 italic">{theme}</p>
+                        <div className="flex flex-col gap-2">
+                          {tasks?.map((task: string, i: number) => (
+                            <div key={i} className="flex items-start gap-2.5 text-sm text-stone-600">
+                              <span className="text-[#4a7c59] mt-0.5 flex-shrink-0">→</span>
+                              <span>{task}</span>
+                            </div>
+                          ))}
+                        </div>
+                      </div>
+                    ))}
+
+                    {/* Current checklist */}
+                    <div className="mt-5 pt-5 border-t border-stone-100">
+                      <p className="text-xs font-bold text-stone-400 uppercase tracking-widest mb-3">Do this now</p>
+                      <div className="flex flex-col gap-2">
+                        {roadmap.current_checklist?.slice(0, 4).map((item: string, i: number) => (
+                          <div key={i} className="flex items-start gap-2.5 p-2.5 rounded-xl bg-[#f0f5f1] border border-[#d4e4d9]">
+                            <div className="w-4 h-4 rounded-full border-2 border-[#4a7c59] flex-shrink-0 mt-0.5" />
+                            <span className="text-xs text-stone-600">{item}</span>
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+
+                    {/* Test prep */}
+                    {roadmap.test_prep && (
+                      <div className="mt-4 pt-4 border-t border-stone-100">
+                        <p className="text-xs font-bold text-stone-400 uppercase tracking-widest mb-2">Test prep targets</p>
+                        <div className="flex gap-3">
+                          <div className="flex-1 bg-stone-50 rounded-xl p-3 text-center border border-stone-100">
+                            <p className="text-lg font-bold text-stone-800">{roadmap.test_prep.sat_target}</p>
+                            <p className="text-xs text-stone-400">SAT target</p>
+                          </div>
+                          <div className="flex-1 bg-stone-50 rounded-xl p-3 text-center border border-stone-100">
+                            <p className="text-lg font-bold text-stone-800">{roadmap.test_prep.act_target}</p>
+                            <p className="text-xs text-stone-400">ACT target</p>
+                          </div>
+                        </div>
+                        <p className="text-xs text-stone-400 mt-2">{roadmap.test_prep.timeline}</p>
+                      </div>
+                    )}
+                  </div>
+                )}
+              </div>
 
             {/* Right column */}
             <div className="flex flex-col gap-6">
