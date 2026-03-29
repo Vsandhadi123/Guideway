@@ -44,7 +44,7 @@ export default function Plan() {
       const res = await fetch('/api/generate', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(profile.answers)
+        body: JSON.stringify({ answers: profile.answers, type: 'plan' })
       })
 
       const data = await res.json()
