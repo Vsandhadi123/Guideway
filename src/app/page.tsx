@@ -68,8 +68,8 @@ function DashboardMockup() {
           <div className="flex items-start justify-between mb-8">
             <div>
               <p className="text-[11px] font-semibold text-stone-300 uppercase tracking-widest mb-1">Week 3 of 18</p>
-              <h2 className="text-2xl font-bold text-stone-900" style={{ fontFamily: 'Fraunces, serif' }}>Hey, Varun 👋</h2>
-              <p className="text-sm text-stone-400 mt-1">Here's your plan for this week.</p>
+              <h2 className="text-2xl font-bold text-stone-900" style={{ fontFamily: 'Fraunces, serif' }}>Hey, Alex 👋</h2>
+              <p className="text-sm text-stone-400 mt-1">Here is your plan for this week.</p>
             </div>
             <div className="flex items-center gap-1.5 bg-[#f0f5f1] border border-[#d4e4d9] px-3 py-1.5 rounded-full">
               <div className="w-1.5 h-1.5 rounded-full bg-[#4a7c59]" />
@@ -79,7 +79,7 @@ function DashboardMockup() {
           <div className="bg-[#4a7c59] rounded-2xl p-5 mb-6 flex items-center justify-between">
             <div>
               <p className="text-[10px] font-bold text-green-200 uppercase tracking-widest mb-1">Weekly check-in</p>
-              <p className="text-sm font-semibold text-white">How's your week going? Update your plan.</p>
+              <p className="text-sm font-semibold text-white">How is your week going? Update your plan.</p>
             </div>
             <div className="bg-white text-[#4a7c59] text-xs font-semibold px-4 py-2 rounded-xl flex-shrink-0">Check in →</div>
           </div>
@@ -215,20 +215,6 @@ export default function Home() {
         .reveal-delay-1 { transition-delay: 0.1s; }
         .reveal-delay-2 { transition-delay: 0.2s; }
         .reveal-delay-3 { transition-delay: 0.3s; }
-
-        @media (max-width: 768px) {
-        .desktop-nav { display: none !important; }
-        .mobile-nav { display: flex !important; }
-        .hero-title { font-size: 42px !important; }
-        .hero-sub { font-size: 16px !important; }
-        .hero-btns { flex-direction: column !important; align-items: stretch !important; }
-        .grid-3 { grid-template-columns: 1fr !important; }
-        .grid-2 { grid-template-columns: 1fr !important; }
-        .mockup-sidebar { display: none !important; }
-        .mockup-cols { grid-template-columns: 1fr !important; }
-        .section-pad { padding: 48px 20px !important; }
-        .footer-row { flex-direction: column !important; gap: 16px !important; }
-      }
       `}</style>
 
       <main className="min-h-screen bg-white" style={{ fontFamily: "'Inter', sans-serif" }}>
@@ -237,8 +223,6 @@ export default function Home() {
         <nav className="sticky top-0 z-50 bg-white/90 backdrop-blur-md border-b border-stone-100">
           <div className="flex items-center justify-between px-8 py-3.5 max-w-7xl mx-auto relative">
             <span className="brand text-xl text-stone-900">Guideway</span>
-
-            {/* Desktop center tabs */}
             <div className="desktop-nav absolute left-1/2 -translate-x-1/2 flex items-center gap-1">
               {navItems.map(({ label, items }) => (
                 <div key={label} className="relative group">
@@ -251,7 +235,7 @@ export default function Home() {
                   <div className="absolute top-full left-0 mt-1 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 translate-y-1 group-hover:translate-y-0 z-50">
                     <div className="bg-white rounded-2xl border border-stone-100 shadow-xl shadow-stone-200/60 p-3 w-64">
                       {items.map(({ title, desc, icon, href }) => (
-                        <Link key={title} href={href || '#'} className="flex items-center gap-3 px-3 py-2.5 rounded-xl hover:bg-stone-50 cursor-pointer transition group/item">
+                        <Link key={title} href={href} className="flex items-center gap-3 px-3 py-2.5 rounded-xl hover:bg-stone-50 cursor-pointer transition group/item">
                           <div className="w-8 h-8 rounded-lg bg-[#f0f5f1] border border-[#d4e4d9] flex items-center justify-center flex-shrink-0 group-hover/item:bg-[#4a7c59] transition-colors">
                             <span className="text-sm">{icon}</span>
                           </div>
@@ -265,45 +249,32 @@ export default function Home() {
                   </div>
                 </div>
               ))}
-              <Link href="/pricing" className="px-3 py-2 text-sm text-stone-500 hover:text-stone-900 transition rounded-lg hover:bg-stone-50">
-                Pricing
-              </Link>
-              <Link href="/enterprise" className="px-3 py-2 text-sm text-stone-500 hover:text-stone-900 transition rounded-lg hover:bg-stone-50">
-                Enterprise
-              </Link>
+              <Link href="/pricing" className="px-3 py-2 text-sm text-stone-500 hover:text-stone-900 transition rounded-lg hover:bg-stone-50">Pricing</Link>
+              <Link href="/enterprise" className="px-3 py-2 text-sm text-stone-500 hover:text-stone-900 transition rounded-lg hover:bg-stone-50">Enterprise</Link>
             </div>
-
-            {/* Desktop right */}
-            <div className="desktop-nav flex items-center gap-3">
-              <Link href="/login" className="text-sm text-stone-500 hover:text-stone-900 transition px-3 py-2 rounded-lg hover:bg-stone-50">
-                Log in
-              </Link>
-              <Link href="/signup" className="text-sm bg-stone-900 text-white px-4 py-2 rounded-lg hover:bg-stone-700 transition font-medium">
-                Get Guideway free
-              </Link>
-            </div>
-
-            {/* Mobile nav */}
-            <div className="mobile-nav hidden items-center gap-3">
-              <Link href="/signup" className="text-sm bg-[#4a7c59] text-white px-4 py-2 rounded-lg font-medium">
-                Get started
-              </Link>
-              <MobileMenu />
+            <div className="flex items-center gap-3">
+              <Link href="/login" className="text-sm text-stone-500 hover:text-stone-900 transition px-3 py-2 rounded-lg hover:bg-stone-50 hidden md:block">Log in</Link>
+              <Link href="/signup" className="text-sm bg-stone-900 text-white px-4 py-2 rounded-lg hover:bg-stone-700 transition font-medium hidden md:block">Start for free</Link>
+              <div className="md:hidden"><MobileMenu /></div>
             </div>
           </div>
         </nav>
 
         {/* Hero */}
         <section className="max-w-5xl mx-auto px-8 pt-24 pb-16 text-center">
-          <h1 className="reveal brand text-7xl text-stone-900 leading-[1.05] tracking-tight mb-6">
+          <div className="reveal inline-flex items-center gap-2 bg-[#f0f5f1] text-[#4a7c59] text-xs font-semibold px-4 py-1.5 rounded-full mb-8 border border-[#d4e4d9]">
+            <span className="w-1.5 h-1.5 bg-[#4a7c59] rounded-full animate-pulse" />
+            Built for high schoolers, by a high schooler
+          </div>
+          <h1 className="reveal reveal-delay-1 brand text-7xl text-stone-900 leading-[1.05] tracking-tight mb-6">
             Your personal roadmap<br />to <span className="italic text-[#4a7c59]">high school success</span>
           </h1>
-          <p className="reveal reveal-delay-1 text-xl text-stone-400 max-w-xl mx-auto mb-10 leading-relaxed">
+          <p className="reveal reveal-delay-2 text-xl text-stone-400 max-w-xl mx-auto mb-10 leading-relaxed">
             Guideway builds you a personalized plan — study schedule, extracurriculars, college roadmap, and weekly check-ins that actually adapt to you.
           </p>
           <div className="reveal reveal-delay-2 flex items-center justify-center gap-4 mb-4">
             <Link href="/signup" className="bg-[#4a7c59] text-white px-7 py-3.5 rounded-xl text-base font-semibold hover:bg-[#3d6849] transition">
-              Get Guideway free →
+              Start for free →
             </Link>
             <Link href="/login" className="text-sm text-stone-500 hover:text-stone-900 transition px-5 py-3.5 rounded-xl border border-stone-200 hover:border-stone-300">
               Log in
@@ -342,31 +313,23 @@ export default function Home() {
 
         <div className="border-t border-stone-100" />
 
-        {/* Interactive feature tabs — Notion style */}
-        <section className="max-w-5xl mx-auto px-8 py-32">
+        {/* Interactive feature tabs */}
+        <section id="features" className="max-w-5xl mx-auto px-8 py-32">
           <div className="reveal mb-12">
             <p className="text-xs font-semibold text-stone-400 uppercase tracking-widest mb-4">Features</p>
             <h2 className="brand text-6xl text-stone-900 leading-tight">Everything<br />in one place.</h2>
           </div>
-
-          {/* Tabs */}
           <div className="reveal flex items-center gap-2 mb-12 border-b border-stone-100 pb-0">
             {featureTabs.map(({ label }) => (
               <button
                 key={label}
                 onClick={() => setActiveTab(label)}
-                className={`px-4 py-3 text-sm font-semibold transition border-b-2 -mb-px ${
-                  activeTab === label
-                    ? 'text-[#4a7c59] border-[#4a7c59]'
-                    : 'text-stone-400 border-transparent hover:text-stone-700'
-                }`}
+                className={`px-4 py-3 text-sm font-semibold transition border-b-2 -mb-px ${activeTab === label ? 'text-[#4a7c59] border-[#4a7c59]' : 'text-stone-400 border-transparent hover:text-stone-700'}`}
               >
                 {label}
               </button>
             ))}
           </div>
-
-          {/* Tab content */}
           <div className="reveal grid grid-cols-2 gap-16 items-center">
             <div>
               <h3 className="brand text-4xl text-stone-900 mb-4 leading-tight">{activeFeature.heading}</h3>
@@ -384,7 +347,7 @@ export default function Home() {
                 ))}
               </div>
               <Link href="/signup" className="inline-flex items-center gap-2 mt-8 text-sm font-semibold text-[#4a7c59] hover:underline">
-                Get started free →
+                Start for free →
               </Link>
             </div>
             <div className="bg-[#fafaf9] rounded-2xl border border-stone-100 p-8 min-h-64 flex items-center justify-center">
@@ -395,7 +358,7 @@ export default function Home() {
 
         <div className="border-t border-stone-100" />
 
-        {/* Solutions by grade — Notion "by team" style */}
+        {/* Solutions by grade */}
         <section className="max-w-5xl mx-auto px-8 py-32">
           <div className="reveal mb-12">
             <p className="text-xs font-semibold text-stone-400 uppercase tracking-widest mb-4">Solutions</p>
@@ -403,12 +366,12 @@ export default function Home() {
           </div>
           <div className="grid grid-cols-2 gap-5">
             {[
-              { grade: '9th Grade', tag: 'Freshman', desc: 'Build the habits and systems that will carry you through all four years. The earlier you start, the easier it gets.', color: 'bg-[#f0f5f1] border-[#d4e4d9]', accent: 'text-[#4a7c59]' },
-              { grade: '10th Grade', tag: 'Sophomore', desc: 'Find your direction. Explore interests, start building your EC profile, and get serious about academics.', color: 'bg-[#f5f3f0] border-[#e4d9c8]', accent: 'text-[#7c6a4a]' },
-              { grade: '11th Grade', tag: 'Junior', desc: 'The year that matters most. SAT/ACT prep, college research, and making your application stand out.', color: 'bg-[#f0f3f5] border-[#c8d4e4]', accent: 'text-[#4a6a7c]' },
-              { grade: '12th Grade', tag: 'Senior', desc: 'Finish strong. Applications, deadlines, and making sure your senior year counts — not just coasts.', color: 'bg-[#f5f0f5] border-[#d9c8e4]', accent: 'text-[#6a4a7c]' },
-            ].map(({ grade, tag, desc, color, accent }) => (
-              <div key={grade} className={`reveal rounded-2xl border p-8 hover:shadow-md transition-all duration-300 cursor-pointer group ${color}`}>
+              { grade: '9th Grade', tag: 'Freshman', desc: 'Build the habits and systems that will carry you through all four years. The earlier you start, the easier it gets.', color: 'bg-[#f0f5f1] border-[#d4e4d9]', accent: 'text-[#4a7c59]', href: '/solutions/9th-grade' },
+              { grade: '10th Grade', tag: 'Sophomore', desc: 'Find your direction. Explore interests, start building your EC profile, and get serious about academics.', color: 'bg-[#f5f3f0] border-[#e4d9c8]', accent: 'text-[#7c6a4a]', href: '/solutions/10th-grade' },
+              { grade: '11th Grade', tag: 'Junior', desc: 'The year that matters most. SAT/ACT prep, college research, and making your application stand out.', color: 'bg-[#f0f3f5] border-[#c8d4e4]', accent: 'text-[#4a6a7c]', href: '/solutions/11th-grade' },
+              { grade: '12th Grade', tag: 'Senior', desc: 'Finish strong. Applications, deadlines, and making sure your senior year counts — not just coasts.', color: 'bg-[#f5f0f5] border-[#d9c8e4]', accent: 'text-[#6a4a7c]', href: '/solutions/12th-grade' },
+            ].map(({ grade, tag, desc, color, accent, href }) => (
+              <Link key={grade} href={href} className={`reveal rounded-2xl border p-8 hover:shadow-md transition-all duration-300 cursor-pointer group ${color}`}>
                 <div className="flex items-center justify-between mb-4">
                   <span className={`text-xs font-bold uppercase tracking-widest ${accent}`}>{tag}</span>
                   <svg width="16" height="16" viewBox="0 0 16 16" fill="none" className={`opacity-0 group-hover:opacity-100 transition ${accent}`}>
@@ -417,8 +380,42 @@ export default function Home() {
                 </div>
                 <h3 className="brand text-3xl text-stone-900 mb-3">{grade}</h3>
                 <p className="text-sm text-stone-500 leading-relaxed">{desc}</p>
-              </div>
+              </Link>
             ))}
+          </div>
+        </section>
+
+        <div className="border-t border-stone-100" />
+
+        {/* Trust section */}
+        <section className="max-w-5xl mx-auto px-8 py-24">
+          <div className="grid grid-cols-2 gap-24 items-center reveal">
+            <div>
+              <p className="text-xs font-semibold text-stone-400 uppercase tracking-widest mb-4">Built responsibly</p>
+              <h2 className="brand text-5xl text-stone-900 leading-tight mb-6">
+                Safe for students.<br /><span className="italic text-[#4a7c59]">Trusted by parents.</span>
+              </h2>
+              <p className="text-stone-400 leading-relaxed mb-6">
+                Guideway was built with student safety and privacy as the foundation. No ads, no data selling, no surprises.
+              </p>
+              <Link href="/contact" className="text-sm text-[#4a7c59] font-semibold hover:underline">
+                Questions? Contact us →
+              </Link>
+            </div>
+            <div className="grid grid-cols-2 gap-4">
+              {[
+                { title: 'No ads. Ever.', desc: 'Guideway is ad-free. We make money from subscriptions, not your attention.' },
+                { title: 'Your data stays yours.', desc: 'We never sell your data. Your profile is used only to generate your plan.' },
+                { title: 'AI used responsibly.', desc: 'AI generates your plan. You stay in control. No decisions are made for you.' },
+                { title: 'Delete anytime.', desc: 'Cancel your account and all your data is permanently deleted. No questions asked.' },
+              ].map(({ title, desc }) => (
+                <div key={title} className="bg-[#fafaf9] border border-stone-100 rounded-2xl p-5 hover:border-[#d4e4d9] transition">
+                  <div className="w-2 h-2 rounded-full bg-[#4a7c59] mb-3" />
+                  <h3 className="text-sm font-semibold text-stone-900 mb-2">{title}</h3>
+                  <p className="text-xs text-stone-400 leading-relaxed">{desc}</p>
+                </div>
+              ))}
+            </div>
           </div>
         </section>
 
@@ -457,7 +454,7 @@ export default function Home() {
             Start for free.<br /><span className="italic text-[#4a7c59]">Get on track.</span>
           </h2>
           <Link href="/signup" className="inline-block bg-[#4a7c59] text-white px-8 py-4 rounded-xl text-base font-semibold hover:bg-[#3d6849] transition">
-            Get Guideway free →
+            Start for free →
           </Link>
           <p className="text-xs text-stone-300 mt-4">No credit card required · Takes 2 minutes</p>
         </section>
@@ -481,7 +478,7 @@ export default function Home() {
               </div>
               <div>
                 <p className="font-semibold text-stone-900 mb-4">Company</p>
-                {['Pricing', 'FAQ', 'Contact'].map(l => (
+                {['Pricing', 'Enterprise', 'FAQ', 'Contact'].map(l => (
                   <p key={l} className="text-stone-400 hover:text-stone-700 cursor-pointer mb-2 transition">{l}</p>
                 ))}
               </div>
@@ -489,7 +486,7 @@ export default function Home() {
           </div>
           <div className="border-t border-stone-100 pt-6 flex items-center justify-between">
             <p className="text-xs text-stone-300">© 2025 Guideway. Built for students, by a student.</p>
-            <p className="text-xs text-stone-300">Made with ♥ in Virginia</p>
+            <p className="text-xs text-stone-300">Made with care in Virginia</p>
           </div>
         </footer>
 
