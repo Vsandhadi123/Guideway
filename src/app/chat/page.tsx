@@ -10,15 +10,6 @@ type Message = {
   content: string
 }
 
-type Profile = {
-  id: string
-  answers?: {
-    grade?: string
-    gpa?: string
-    interests?: string
-  }
-}
-
 const SUGGESTIONS = [
   'Help me study for my next exam',
   'Quiz me on a topic',
@@ -34,7 +25,7 @@ export default function Chat() {
   const [messages, setMessages] = useState<Message[]>([])
   const [input, setInput] = useState('')
   const [loading, setLoading] = useState(false)
-  const [profile, setProfile] = useState<Profile | null>(null)
+  const [profile, setProfile] = useState<any>(null)
   const [pageLoading, setPageLoading] = useState(true)
   const bottomRef = useRef<HTMLDivElement>(null)
 
@@ -54,7 +45,7 @@ export default function Chat() {
       }])
     }
     load()
-  }, [router, supabase])
+  }, [])
 
   useEffect(() => {
     bottomRef.current?.scrollIntoView({ behavior: 'smooth' })
@@ -74,10 +65,10 @@ export default function Chat() {
 Here is what you know about this student:
 - Grade: ${profile?.answers?.grade || 'high school'}
 - GPA: ${profile?.answers?.gpa || 'unknown'}
-- Struggles: ${profile?.answers?.struggles?.join(', ') || 'not specified'}
+- Struggles: ${((profile?.answers as any)?.struggles || []).join(', ') || 'not specified'}
 - Interests: ${profile?.answers?.interests || 'not specified'}
-- Goals: ${profile?.answers?.goals?.join(', ') || 'not specified'}
-- Stress level: ${profile?.answers?.stress || 'unknown'}/10
+- Goals: ${((profile?.answers as any)?.goals || []).join(', ') || 'not specified'}
+- Stress level: ${(profile?.answers as any)?.stress || 'unknown'}/10
 - Study hours per week: ${profile?.answers?.hours || 'unknown'}
 
 Your role:
