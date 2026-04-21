@@ -45,7 +45,7 @@ export default function NinthGrade() {
             Start strong. <em>Build the habits that last.</em>
           </h1>
           <p className="text-lg text-stone-400 leading-relaxed mb-8">
-            9th grade sets the tone for everything that follows. Most students don't realize this until it's too late. Guideway helps you build the systems, habits, and mindset that make the next 3 years easier.
+            9th grade sets the tone for everything that follows. Most students don&apos;t realize this until it&apos;s too late. Guideway helps you build the systems, habits, and mindset that make the next 3 years easier.
           </p>
           <Link href="/signup" className="inline-block bg-[#4a7c59] text-white px-6 py-3 rounded-xl text-sm font-semibold hover:bg-[#3d6849] transition">
             Get my 9th grade plan →
@@ -64,7 +64,7 @@ export default function NinthGrade() {
               Freshman year GPA counts. The habits you build now — how you study, how you manage time, how you handle stress — will carry you through AP classes, college apps, and beyond.
             </p>
             <p className="text-stone-400 leading-relaxed">
-              Most 9th graders wing it. The ones who don't end up years ahead. Guideway gives you a real plan from day one.
+              Most 9th graders wing it. The ones who don&apos;t end up years ahead. Guideway gives you a real plan from day one.
             </p>
           </div>
           <div className="flex flex-col gap-5">

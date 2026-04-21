@@ -12,75 +12,176 @@ const steps = [
     type: 'chips',
     options: ['9th grade', '10th grade', '11th grade', '12th grade'],
     reactions: {
-      '9th grade': "Freshman year — you have the most runway of anyone. Let's use it.",
-      '10th grade': "Sophomore year — perfect time to get intentional. You're ahead of most.",
-      '11th grade': "Junior year. The big one. Let's make every week count.",
-      '12th grade': "Senior year — it's not too late. The right plan now changes everything.",
+      '9th grade': "Freshman year — the best time to build leverage.",
+      '10th grade': "Sophomore year — perfect time to get intentional.",
+      '11th grade': "Junior year — the most important academic year.",
+      '12th grade': "Senior year — strong decisions now still change everything."
     }
   },
+
   {
     id: 'gpa',
     question: "What's your current GPA?",
-    sub: "Be honest — this shapes your entire plan.",
+    sub: "Be honest — strategy starts with reality.",
     type: 'chips',
-    options: ['Below 2.0', '2.0 – 2.5', '2.5 – 3.0', '3.0 – 3.5', '3.5 – 4.0', '4.0+'],
+    options: [
+      'Below 2.0',
+      '2.0 – 2.5',
+      '2.5 – 3.0',
+      '3.0 – 3.5',
+      '3.5 – 4.0',
+      '4.0+'
+    ],
     reactions: {
-      'Below 2.0': "Knowing where you are is the first step. We've seen students turn this around completely.",
-      '2.0 – 2.5': "Real room to grow here. A focused plan moves this faster than you think.",
-      '2.5 – 3.0': "Solid foundation. Now let's make sure you're doing the right work.",
-      '3.0 – 3.5': "Good standing. Let's push you into the top tier.",
-      '3.5 – 4.0': "Strong. Let's make sure the rest of your profile matches.",
-      '4.0+': "Impressive. Let's make sure you're building a life, not just a GPA.",
+      'Below 2.0': "Good. We work with reality, not fantasy.",
+      '2.0 – 2.5': "This can move faster than you think with the right system.",
+      '2.5 – 3.0': "Solid base. Now we optimize upward.",
+      '3.0 – 3.5': "Good standing. Let's push you into stronger territory.",
+      '3.5 – 4.0': "Strong GPA. Now your profile needs to match.",
+      '4.0+': "Excellent. Now we focus on standing out beyond grades."
     }
   },
+
+  {
+    id: 'major',
+    question: "What major or career are you aiming for?",
+    sub: "Your roadmap depends on where you're headed.",
+    type: 'chips',
+    options: [
+      'Computer Science',
+      'Engineering',
+      'Pre-Med',
+      'Business',
+      'Finance',
+      'Law',
+      'Psychology',
+      'Not sure yet'
+    ],
+    reactions: {
+      default: "Perfect — your academic strategy should match your future, not fight it."
+    }
+  },
+
+  {
+    id: 'colleges',
+    question: "What schools are on your radar?",
+    sub: "Dream schools help us reverse-engineer your plan.",
+    type: 'text',
+    placeholder: "e.g. UVA, Virginia Tech, Georgia Tech, Stanford...",
+    reactions: {
+      default: "Now we can compare where you are vs where you want to be."
+    }
+  },
+
+  {
+    id: 'classes',
+    question: "What classes are you taking right now?",
+    sub: "AP, Honors, Dual Enrollment — all of it matters.",
+    type: 'text',
+    placeholder: "e.g. AP CSA, AP Calc AB, Honors Chem, AP Lang...",
+    reactions: {
+      default: "Course rigor matters almost as much as GPA."
+    }
+  },
+
+  {
+    id: 'ecs',
+    question: "What extracurriculars are you already involved in?",
+    sub: "Leadership and impact matter more than random participation.",
+    type: 'multi',
+    options: [
+      'TSA',
+      'Key Club',
+      'Sports',
+      'Research',
+      'Volunteering',
+      'Internship',
+      'Business',
+      'Music / Arts',
+      'Student Government',
+      'None yet'
+    ],
+    reactions: {
+      default: "Good — now we can identify what’s missing from your profile."
+    }
+  },
+
+  {
+    id: 'leadership',
+    question: "Do you currently hold any leadership roles?",
+    sub: "Leadership is one of the biggest admissions differentiators.",
+    type: 'chips',
+    options: [
+      'Yes — strong leadership',
+      'Some leadership',
+      'Very little',
+      'None yet'
+    ],
+    reactions: {
+      default: "This is one of the fastest areas to improve strategically."
+    }
+  },
+
   {
     id: 'struggles',
     question: "Where do you struggle most?",
-    sub: "Pick everything that feels true — no judgment.",
+    sub: "Pick what actually slows you down.",
     type: 'multi',
-    options: ['Staying focused', 'Managing time', 'Procrastinating', 'Test anxiety', 'Understanding material', 'Staying motivated', 'Balancing activities', 'Sleep / energy'],
-    reactions: { default: "These are the same things most high achievers struggle with. Your plan tackles them directly." }
-  },
-  {
-    id: 'interests',
-    question: "What are you actually into?",
-    sub: "Be specific — this shapes your EC suggestions.",
-    type: 'text',
-    placeholder: 'e.g. coding, basketball, music, photography...',
-    reactions: { default: "We will find real opportunities that match what you actually care about." }
-  },
-  {
-    id: 'goals',
-    question: "Where do you see yourself after high school?",
-    sub: "Dream big. Your roadmap is built around this.",
-    type: 'multi',
-    options: ['Top university', 'State / in-state school', 'Community college', 'Trade / vocational', 'Start a business', 'Not sure yet'],
-    reactions: { default: "Every recommendation in your plan will be built around exactly this." }
-  },
-  {
-    id: 'hours',
-    question: "How many hours can you study per week?",
-    sub: "Be realistic — we build around what you actually have.",
-    type: 'slider',
-    min: 1,
-    max: 30,
-    default: 10,
-    reactions: { default: "Realistic plans get followed. We build around this, not an idealized version of your week." }
-  },
-  {
-    id: 'stress',
-    question: "How stressed are you feeling right now?",
-    sub: "This directly shapes your plan.",
-    type: 'slider',
-    min: 1,
-    max: 10,
-    default: 5,
+    options: [
+      'Staying focused',
+      'Managing time',
+      'Procrastinating',
+      'Test anxiety',
+      'Understanding material',
+      'Staying motivated',
+      'Balancing activities',
+      'Sleep / energy'
+    ],
     reactions: {
-      low: "Good — let's keep it that way while you level up.",
-      mid: "Manageable. We'll build in breathing room.",
-      high: "Heard. Mental health is a core part of your plan, not an afterthought.",
+      default: "Your system should solve this — not just tell you to work harder."
     }
   },
+
+  {
+    id: 'interests',
+    question: "What are you genuinely interested in?",
+    sub: "This helps us suggest better opportunities, not generic ones.",
+    type: 'text',
+    placeholder: "e.g. coding, startups, robotics, basketball, music...",
+    reactions: {
+      default: "The best extracurriculars come from real interest, not resume stuffing."
+    }
+  },
+
+  {
+    id: 'scores',
+    question: "SAT / ACT score (optional)",
+    sub: "Skip if you haven't taken one yet.",
+    type: 'text',
+    placeholder: "e.g. SAT 1380, ACT 29, Not taken yet",
+    reactions: {
+      default: "This helps us set realistic score targets."
+    }
+  },
+
+  {
+    id: 'goals',
+    question: "What do you want most from Guideway?",
+    sub: "Your audit should solve your real problem.",
+    type: 'multi',
+    options: [
+      'Get into a top university',
+      'Raise my GPA',
+      'Build stronger extracurriculars',
+      'Find scholarships',
+      'Reduce stress',
+      'Create a better schedule',
+      'Figure out my future'
+    ],
+    reactions: {
+      default: "Perfect — your academic audit will prioritize exactly this."
+    }
+  }
 ]
 
 function getReaction(step: any, answer: any): string {
@@ -110,7 +211,7 @@ function ProfileCard({ answers, currentStep, steps }: { answers: Record<string, 
       <div className="flex items-center justify-between mb-6">
         <div>
           <p className="text-xs font-bold text-stone-300 uppercase tracking-widest mb-1">Your profile</p>
-          <p className="text-sm font-semibold text-stone-800">Building your plan...</p>
+          <p className="text-sm font-semibold text-stone-800">Running your academic audit...</p>
         </div>
         <div className="relative w-16 h-16">
           <svg width="64" height="64" viewBox="0 0 64 64" className="-rotate-90">
@@ -245,7 +346,7 @@ function ProfileCard({ answers, currentStep, steps }: { answers: Record<string, 
 
       {pct === 100 && (
         <div className="mt-4 p-3 bg-[#4a7c59] rounded-2xl text-center">
-          <p className="text-xs font-semibold text-white">Profile complete! Generating your plan...</p>
+          <p className="text-xs font-semibold text-white">Profile complete! Running your academic audit...</p>
         </div>
       )}
     </div>
@@ -305,11 +406,12 @@ export default function Onboarding() {
       const { data: { user } } = await supabase.auth.getUser()
       if (user) {
         await supabase.from('profiles').upsert({
-          id: user.id,
-          answers: finalAnswers,
-          plan: null,
-          updated_at: new Date().toISOString(),
-        })
+        id: user.id,
+        answers: finalAnswers,
+        audit_status: 'pending',
+        academic_audit: null,
+        updated_at: new Date().toISOString(),
+      })
       }
       localStorage.setItem('guideway_answers', JSON.stringify(finalAnswers))
       router.push('/dashboard')
@@ -454,7 +556,7 @@ export default function Onboarding() {
                 disabled={!canContinue() || saving}
                 className="mt-8 w-full py-4 bg-[#4a7c59] text-white rounded-2xl font-semibold text-base disabled:opacity-30 disabled:cursor-not-allowed hover:bg-[#3d6849] transition shadow-lg shadow-[#4a7c59]/20"
               >
-                {saving ? 'Building your plan...' : current === steps.length - 1 ? 'Build my plan →' : 'Continue →'}
+                {saving ? 'Running your academic audit...' : current === steps.length - 1 ? 'Run my Academic Audit →' : 'Continue →'}
               </button>
             </div>
           )}
@@ -462,7 +564,7 @@ export default function Onboarding() {
 
         {/* Right — Live profile card */}
         <div className="pt-8">
-          <p className="text-xs font-bold text-stone-300 uppercase tracking-widest mb-4">Your profile — building live</p>
+          <p className="text-xs font-bold text-stone-300 uppercase tracking-widest mb-4">Academic profile — building live</p>
           <ProfileCard answers={answers} currentStep={current} steps={steps} />
         </div>
       </div>

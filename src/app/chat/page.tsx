@@ -10,6 +10,15 @@ type Message = {
   content: string
 }
 
+type Profile = {
+  id: string
+  answers?: {
+    grade?: string
+    gpa?: string
+    interests?: string
+  }
+}
+
 const SUGGESTIONS = [
   'Help me study for my next exam',
   'Quiz me on a topic',
@@ -25,7 +34,7 @@ export default function Chat() {
   const [messages, setMessages] = useState<Message[]>([])
   const [input, setInput] = useState('')
   const [loading, setLoading] = useState(false)
-  const [profile, setProfile] = useState<any>(null)
+  const [profile, setProfile] = useState<Profile | null>(null)
   const [pageLoading, setPageLoading] = useState(true)
   const bottomRef = useRef<HTMLDivElement>(null)
 
@@ -45,7 +54,7 @@ export default function Chat() {
       }])
     }
     load()
-  }, [])
+  }, [router, supabase])
 
   useEffect(() => {
     bottomRef.current?.scrollIntoView({ behavior: 'smooth' })

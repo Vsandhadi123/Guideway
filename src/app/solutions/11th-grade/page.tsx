@@ -43,7 +43,7 @@ export default function EleventhGrade() {
           <div>
             <p className="text-xs font-semibold text-stone-400 uppercase tracking-widest mb-4">Why 11th grade matters most</p>
             <h2 className="brand text-5xl text-stone-900 leading-tight mb-6">Everything converges this year.</h2>
-            <p className="text-stone-400 leading-relaxed mb-6">Junior year GPA is the most recent and heavily weighted by colleges. Your SAT/ACT score is due. Your college list needs to take shape. And you're probably in your hardest classes yet.</p>
+            <p className="text-stone-400 leading-relaxed mb-6">Junior year GPA is the most recent and heavily weighted by colleges. Your SAT/ACT score is due. Your college list needs to take shape. And you&apos;re probably in your hardest classes yet.</p>
             <p className="text-stone-400 leading-relaxed">Without a system, junior year overwhelms most students. Guideway builds you one before it starts.</p>
           </div>
           <div className="flex flex-col gap-5">

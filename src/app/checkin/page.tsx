@@ -7,78 +7,89 @@ import { createClient } from '@/lib/supabase'
 const steps = [
   {
     id: 'week_rating',
-    question: "How was your week overall?",
-    type: 'chips',
-    options: ['Terrible', 'Rough', 'Okay', 'Good', 'Amazing'],
+    question: "How did this week go overall?",
+    hint: "Be honest — this helps Guideway adjust your plan.",
+    type: 'slider',
+    min: 1,
+    max: 10,
+    default: 6,
     reactions: {
-      'Terrible': "That's okay — rough weeks happen. Let's adjust your plan so next week is better.",
-      'Rough': "Noted. We'll lighten the load a bit and focus on what actually matters.",
-      'Okay': "Solid. Consistency beats perfection — let's keep the momentum going.",
-      'Good': "Love to hear it. Let's build on that energy this week.",
-      'Amazing': "Let's go! We'll push a little harder this week while you're in the zone.",
+      low: "That’s okay — rough weeks happen. We’ll simplify and refocus.",
+      mid: "Solid. We’ll keep momentum and tighten what matters most.",
+      high: "Love that. We can push a little harder this week."
     }
   },
   {
-    id: 'completed',
-    question: "What did you complete from your plan?",
-    hint: "Pick everything you got done",
-    type: 'multi',
-    options: ['Study sessions', 'Extracurricular activities', 'College research', 'SAT/ACT prep', 'Homework/assignments', 'Mental health practices'],
-    reactions: {
-      default: "Great progress. Every completed task is a step forward — your plan will reflect this."
-    }
-  },
-  {
-    id: 'accomplishments',
-    question: "Did you accomplish anything new this week?",
-    hint: "Awards, milestones, conversations, anything",
+    id: 'completed_wins',
+    question: "What did you actually get done this week?",
+    hint: "Classes, projects, clubs, tests, anything meaningful.",
     type: 'text',
-    placeholder: 'e.g. joined robotics club, got an A on my bio test, talked to a college counselor...',
+    placeholder: 'e.g. finished my CSA project, studied for math, went to TSA, got an A on a quiz...',
     reactions: {
-      default: "That is worth noting. We will factor this into your updated plan."
+      default: "Good — progress matters, even if the week wasn’t perfect."
     }
   },
   {
-    id: 'stress',
-    question: "What is your stress level right now?",
+    id: 'biggest_blockers',
+    question: "What got in the way most?",
+    hint: "Pick the biggest things that slowed you down.",
+    type: 'multi',
+    options: [
+      'Procrastination',
+      'Too much homework',
+      'Test stress',
+      'Phone / distractions',
+      'Low energy',
+      'Too many activities',
+      'Family / personal stuff',
+      'Did not know what to prioritize'
+    ],
+    reactions: {
+      default: "That helps. Your next plan should solve the real bottleneck."
+    }
+  },
+  {
+    id: 'stress_level',
+    question: "How stressed do you feel right now?",
+    hint: "This affects how intense next week should be.",
     type: 'slider',
     min: 1,
     max: 10,
     default: 5,
     reactions: {
-      low: "Good — your plan will keep things manageable while still pushing you forward.",
-      mid: "We will make sure your plan has breathing room built in this week.",
-      high: "Heard. We will dial back intensity and prioritize what actually moves the needle.",
+      low: "Good — we can keep things ambitious but controlled.",
+      mid: "Makes sense. We’ll keep breathing room in the plan.",
+      high: "Heard. We’ll cut the noise and focus only on the highest-impact work."
     }
   },
   {
-    id: 'new_goals',
-    question: "Any new goals or changes?",
-    hint: "New interests, target schools, life changes — anything",
-    type: 'text',
-    placeholder: 'e.g. I want to apply to UVA now, I joined a new club, I want to focus more on coding...',
-    reactions: {
-      default: "Got it — your plan will be updated to reflect this."
-    }
-  },
-  {
-    id: 'focus',
-    question: "What do you want to focus on most next week?",
+    id: 'next_week_focus',
+    question: "What matters most next week?",
+    hint: "What do you want Guideway to prioritize?",
     type: 'chips',
-    options: ['Academics', 'Extracurriculars', 'College prep', 'Mental health', 'Time management', 'A specific subject'],
+    options: [
+      'Raise my grades',
+      'Stay consistent',
+      'Get ahead academically',
+      'Improve time management',
+      'Reduce stress',
+      'Focus on college prep',
+      'Build extracurriculars'
+    ],
     reactions: {
-      default: "Perfect. We will make sure your updated plan prioritizes exactly this."
+      default: "Perfect. Your updated plan should reflect that."
     }
   },
 ]
 
 function getReaction(step: any, answer: any): string {
-  if (step.id === 'stress') {
+  if (step.id === 'stress_level' || step.id === 'week_rating') {
     const val = Number(answer)
     if (val <= 3) return step.reactions.low
     if (val <= 6) return step.reactions.mid
     return step.reactions.high
   }
+
   if (step.reactions[answer]) return step.reactions[answer]
   return step.reactions.default || "Got it."
 }
@@ -130,33 +141,109 @@ export default function CheckIn() {
       setCurrent(current + 1)
       setAnimIn(true)
     } else {
-      setSaving(true)
+  setSaving(true)
 
-      const { data: { user } } = await supabase.auth.getUser()
-      if (user) {
-        const { data: profile } = await supabase
-          .from('profiles')
-          .select('answers')
-          .eq('id', user.id)
-          .single()
+  const { data: { user } } = await supabase.auth.getUser()
 
-        const updatedAnswers = {
-          ...profile?.answers,
-          stress: answers.stress ?? 5,
-          last_checkin: new Date().toISOString(),
-          checkin_focus: answers.focus,
-          checkin_goals: answers.new_goals,
-        }
+  if (user) {
+    const { data: profile } = await supabase
+      .from('profiles')
+      .select('answers, academic_audit')
+      .eq('id', user.id)
+      .single()
 
-        await supabase.from('profiles').update({
-          answers: updatedAnswers,
-          plan: null,
-          updated_at: new Date().toISOString(),
-        }).eq('id', user.id)
+    // 1. Build check-in data
+    const checkinData = {
+      user_id: user.id,
+      week_rating: answers.week_rating ?? 6,
+      completed_wins: answers.completed_wins || '',
+      biggest_blockers: answers.biggest_blockers || [],
+      stress_level: answers.stress_level ?? 5,
+      next_week_focus: answers.next_week_focus || '',
+    }
+
+    // 2. Save check-in to Supabase
+    
+    const insertRes = await supabase.from('checkins').insert(checkinData)
+
+    // 3. Call AI to replan
+    const generateRes = await fetch('/api/generate', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({
+      type: 'weekly_replan',
+      answers: profile?.answers,
+      academicAudit: profile?.academic_audit,
+      checkin: checkinData,
+    }),
+  })
+
+  let replanned: any = null
+
+  console.log('generateRes status:', generateRes.status)
+  console.log('generateRes ok:', generateRes.ok)
+
+  try {
+    replanned = await generateRes.json()
+  } catch (error) {
+    console.error('Failed to parse /api/generate response:', error)
+  }
+
+  console.log('weekly_replan response full:', JSON.stringify(replanned, null, 2))
+  console.log('updated_competitiveness only:', replanned?.updated_competitiveness)
+
+  if (replanned && !replanned.error) {
+    const updatedAudit = {
+    ...(profile?.academic_audit || {}),
+    priority_actions:
+      replanned.updated_priority_actions ||
+      profile?.academic_audit?.priority_actions ||
+      [],
+    competitiveness:
+      replanned.updated_competitiveness ||
+      profile?.academic_audit?.competitiveness ||
+      [],
+    weekly_summary: replanned.summary || '',
+    weekly_motivation: replanned.motivation || '',
+    updated_schedule: replanned.updated_schedule || [],
+  }
+
+    await supabase
+      .from('profiles')
+      .update({
+        academic_audit: updatedAudit,
+        updated_at: new Date().toISOString(),
+      })
+      .eq('id', user.id)
+  } else {
+    console.error('weekly_replan failed:', replanned)
+  }
+
+    // 4. Update dashboard data
+    if (replanned && !replanned.error) {
+      const updatedAudit = {
+        ...(profile?.academic_audit || {}),
+        priority_actions:
+          replanned.updated_priority_actions ||
+          profile?.academic_audit?.priority_actions ||
+          [],
+        weekly_summary: replanned.summary || '',
+        weekly_motivation: replanned.motivation || '',
+        updated_schedule: replanned.updated_schedule || [],
       }
 
-      router.push('/plan')
+      await supabase
+        .from('profiles')
+        .update({
+          academic_audit: updatedAudit,
+          updated_at: new Date().toISOString(),
+        })
+        .eq('id', user.id)
     }
+  }
+
+  router.push('/dashboard')
+}
   }
 
   return (
@@ -317,7 +404,7 @@ export default function CheckIn() {
                 disabled={!canContinue() || saving}
                 className="mt-8 w-full py-4 bg-[#4a7c59] text-white rounded-2xl font-semibold text-base disabled:opacity-30 disabled:cursor-not-allowed shadow-lg shadow-[#4a7c59]/20 hover:bg-[#3d6849] transition"
               >
-                {saving ? 'Updating your plan...' : current === steps.length - 1 ? 'Update my plan →' : 'Continue →'}
+                {saving ? 'Replanning your week...' : current === steps.length - 1 ? 'Update my week →' : 'Continue →'}
               </button>
             </div>
           )}

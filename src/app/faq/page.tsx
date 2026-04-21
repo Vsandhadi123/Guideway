@@ -66,7 +66,7 @@ export default function FAQ() {
       <section className="max-w-3xl mx-auto px-8 pt-20 pb-12">
         <p className="text-xs font-semibold text-stone-400 uppercase tracking-widest mb-4">FAQ</p>
         <h1 className="brand text-6xl text-stone-900 leading-tight mb-4">Common questions.</h1>
-        <p className="text-lg text-stone-400">Everything you need to know about Guideway. Can't find your answer? <Link href="/contact" className="text-[#4a7c59] hover:underline">Contact us</Link>.</p>
+        <p className="text-lg text-stone-400">Everything you need to know about Guideway. Can&apos;t find your answer? <Link href="/contact" className="text-[#4a7c59] hover:underline">Contact us</Link>.</p>
       </section>
 
       <div className="border-t border-stone-100" />

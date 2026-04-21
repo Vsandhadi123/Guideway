@@ -33,7 +33,7 @@ export default function TenthGrade() {
             Sophomore year
           </div>
           <h1 className="brand text-6xl text-stone-900 leading-tight mb-5">Find your direction. <em>Build your identity.</em></h1>
-          <p className="text-lg text-stone-400 leading-relaxed mb-8">Sophomore year is about narrowing down. You've tried things — now it's time to double down on what actually matters to you and start building a story colleges will remember.</p>
+          <p className="text-lg text-stone-400 leading-relaxed mb-8">Sophomore year is about narrowing down. You&apos;ve tried things — now it&apos;s time to double down on what actually matters to you and start building a story colleges will remember.</p>
           <Link href="/signup" className="inline-block bg-[#4a7c59] text-white px-6 py-3 rounded-xl text-sm font-semibold hover:bg-[#3d6849] transition">Get my 10th grade plan →</Link>
         </div>
       </section>
@@ -43,7 +43,7 @@ export default function TenthGrade() {
           <div>
             <p className="text-xs font-semibold text-stone-400 uppercase tracking-widest mb-4">Why 10th grade matters</p>
             <h2 className="brand text-5xl text-stone-900 leading-tight mb-6">The year most students waste.</h2>
-            <p className="text-stone-400 leading-relaxed mb-6">10th grade often feels low-stakes — no college apps yet, no SAT pressure. But it's actually the year where students with a plan pull significantly ahead of those without one.</p>
+            <p className="text-stone-400 leading-relaxed mb-6">10th grade often feels low-stakes — no college apps yet, no SAT pressure. But it&apos;s actually the year where students with a plan pull significantly ahead of those without one.</p>
             <p className="text-stone-400 leading-relaxed">Your sophomore year EC commitments, GPA trajectory, and emerging interests form the narrative your college application will tell.</p>
           </div>
           <div className="flex flex-col gap-5">
@@ -66,7 +66,7 @@ export default function TenthGrade() {
       </section>
       <div className="border-t border-stone-100" />
       <section className="max-w-3xl mx-auto px-8 py-24 text-center">
-        <h2 className="brand text-6xl text-stone-900 mb-6">Don't waste sophomore year.</h2>
+        <h2 className="brand text-6xl text-stone-900 mb-6">Don&apos;t waste sophomore year.</h2>
         <p className="text-stone-400 mb-8">Get your personalized 10th grade plan. Free to start.</p>
         <Link href="/signup" className="inline-block bg-[#4a7c59] text-white px-8 py-4 rounded-xl text-base font-semibold hover:bg-[#3d6849] transition">Get my plan →</Link>
         <p className="text-xs text-stone-300 mt-4">No credit card required</p>

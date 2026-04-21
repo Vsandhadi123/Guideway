@@ -118,7 +118,7 @@ export default function AIStudyPlan() {
               Not advice. An actual plan.
             </h2>
             <p className="text-stone-400 leading-relaxed mb-6">
-              Most study advice is generic — "use flashcards", "study more". Guideway's AI Study Plan is different. It reads your profile and builds specific strategies for your specific situation.
+              Most study advice is generic — &ldquo;use flashcards&rdquo;, &ldquo;study more&rdquo;. Guideway&apos;s AI Study Plan is different. It reads your profile and builds specific strategies for your specific situation.
             </p>
             <p className="text-stone-400 leading-relaxed">
               Struggling with procrastination and have 10 hours a week? You get a plan for that. Have a 3.8 GPA and want to push to 4.0? You get a plan for that too. Every plan is different because every student is different.
@@ -180,7 +180,7 @@ export default function AIStudyPlan() {
               Research shows that how you study matters far more than how long you study. Active recall beats passive rereading. Spaced repetition beats cramming. But most students never learn these techniques.
             </p>
             <p className="text-stone-400 leading-relaxed">
-              Guideway's AI Study Plan builds these proven techniques into your daily routine — automatically, without you needing to know they exist.
+              Guideway&apos;s AI Study Plan builds these proven techniques into your daily routine — automatically, without you needing to know they exist.
             </p>
           </div>
           <div className="grid grid-cols-2 gap-4">

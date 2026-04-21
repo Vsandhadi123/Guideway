@@ -3,6 +3,10 @@
 import { useEffect, useState } from 'react'
 import { useRouter } from 'next/navigation'
 import { createClient } from '@/lib/supabase'
+import { User } from '@supabase/supabase-js'
+
+type Profile = Record<string, unknown>
+type Plan = Record<string, Record<string, unknown>>
 
 const SECTIONS = [
   { key: 'academic', title: 'Academic Study Plan', icon: '📚', color: '#4a7c59', bg: '#f0f5f1', border: '#d4e4d9' },
@@ -16,11 +20,11 @@ const SECTIONS = [
 export default function Plan() {
   const router = useRouter()
   const supabase = createClient()
-  const [plan, setPlan] = useState<Record<string, any> | null>(null)
+  const [plan, setPlan] = useState<Plan | null>(null)
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState('')
-  const [user, setUser] = useState<any>(null)
-  const [profile, setProfile] = useState<any>(null)
+  const [user, setUser] = useState<User | null>(null)
+  const [profile, setProfile] = useState<Profile | null>(null)
   const [activeSection, setActiveSection] = useState('academic')
   const [menuOpen, setMenuOpen] = useState(false)
 
@@ -51,8 +55,8 @@ export default function Plan() {
         body: JSON.stringify({ answers: profile.answers, type: 'plan' })
       })
 
-      const data = await res.json()
-      if (data.error) { setError('Something went wrong generating your plan.'); setLoading(false); return }
+      const data = await res.json() as Plan
+      if ((data as Record<string, unknown>).error) { setError('Something went wrong generating your plan.'); setLoading(false); return }
       await supabase.from('profiles').update({ plan: data }).eq('id', user.id)
       setPlan(data)
       setLoading(false)
@@ -129,7 +133,7 @@ export default function Plan() {
             <div>
               <p className="text-xs font-bold text-[#4a7c59] uppercase tracking-widest mb-2">Your Guideway Plan</p>
               <h1 className="brand text-5xl text-stone-900 mb-3">
-                {name}'s Success Plan
+                {name}&apos;s Success Plan
               </h1>
               <p className="text-stone-400 text-base">AI-generated and personalized to your exact profile. Updates every week.</p>
             </div>

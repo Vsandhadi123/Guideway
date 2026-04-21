@@ -1,10 +1,12 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { createServerClient } from '@supabase/ssr'
 
+type OtpType = 'signup' | 'invite' | 'magiclink' | 'recovery' | 'email_change' | 'email'
+
 export async function GET(request: NextRequest) {
   const { searchParams } = new URL(request.url)
   const token_hash = searchParams.get('token_hash')
-  const type = searchParams.get('type')
+  const type = searchParams.get('type') as OtpType
   const next = searchParams.get('next') ?? '/dashboard'
 
   if (token_hash && type) {
@@ -19,7 +21,7 @@ export async function GET(request: NextRequest) {
       }
     )
 
-    const { error } = await supabase.auth.verifyOtp({ type: type as any, token_hash })
+    const { error } = await supabase.auth.verifyOtp({ type, token_hash })
 
     if (!error) {
       return NextResponse.redirect(new URL(next, request.url))

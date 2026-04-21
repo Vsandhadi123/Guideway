@@ -2,8 +2,11 @@
 
 import { useEffect, useState } from 'react'
 import { useRouter } from 'next/navigation'
-import Link from 'next/link'
 import { createClient } from '@/lib/supabase'
+import { User } from '@supabase/supabase-js'
+
+type Profile = Record<string, unknown>
+type Opportunities = Record<string, unknown>
 
 const CATEGORIES = [
   { key: 'competitions', label: 'Competitions', emoji: '🏆' },
@@ -17,11 +20,11 @@ const CATEGORIES = [
 export default function Opportunities() {
   const router = useRouter()
   const supabase = createClient()
-  const [opportunities, setOpportunities] = useState<any>(null)
+  const [opportunities, setOpportunities] = useState<Opportunities | null>(null)
   const [loading, setLoading] = useState(true)
   const [generating, setGenerating] = useState(false)
   const [activeTab, setActiveTab] = useState('competitions')
-  const [profile, setProfile] = useState<any>(null)
+  const [profile, setProfile] = useState<Profile | null>(null)
 
   useEffect(() => {
     async function load() {
@@ -37,13 +40,14 @@ export default function Opportunities() {
 
   async function generate() {
     setGenerating(true)
+    const answers = (profile as Profile & { answers?: unknown })?.answers
     const res = await fetch('/api/generate', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ answers: profile.answers, type: 'opportunities' })
+      body: JSON.stringify({ answers, type: 'opportunities' })
     })
-    const data = await res.json()
-    if (!data.error) {
+    const data = await res.json() as Opportunities
+    if (!(data as Record<string, unknown>).error) {
       setOpportunities(data)
       const { data: { user } } = await supabase.auth.getUser()
       if (user) await supabase.from('profiles').update({ opportunities: data }).eq('id', user.id)

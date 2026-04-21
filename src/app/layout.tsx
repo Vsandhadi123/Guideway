@@ -2,6 +2,13 @@ import type { Metadata } from "next";
 import "./globals.css";
 import PageTransition from "@/components/PageTransition";
 
+// Example: Google Font (Inter)
+import { Inter } from "next/font/google";
+const inter = Inter({ subsets: ["latin"] });
+
+// Optional: wrap global providers here
+// import Providers from "@/components/Providers";
+
 export const metadata: Metadata = {
   title: "Guideway",
   description: "Your personalized high school success plan.",
@@ -9,15 +16,17 @@ export const metadata: Metadata = {
 
 export default function RootLayout({
   children,
-}: Readonly<{
+}: {
   children: React.ReactNode;
-}>) {
+}) {
   return (
     <html lang="en">
-      <body style={{ margin: 0 }}>
-        <PageTransition>
-          {children}
-        </PageTransition>
+      <body className={`${inter.className} min-h-screen bg-white text-black`}>
+        {/* <Providers> */}
+          <PageTransition>
+            {children}
+          </PageTransition>
+        {/* </Providers> */}
       </body>
     </html>
   );

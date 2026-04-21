@@ -5,6 +5,7 @@ import { useRouter } from 'next/navigation'
 import { createClient } from '@/lib/supabase'
 
 export default function Dashboard() {
+  const [auditLoading, setAuditLoading] = useState(false)
   const [roadmap, setRoadmap] = useState<any>(null)
   const [roadmapLoading, setRoadmapLoading] = useState(false)
   const [activeYear, setActiveYear] = useState('9th Grade')
@@ -12,7 +13,7 @@ export default function Dashboard() {
   const supabase = createClient()
   const [user, setUser] = useState<any>(null)
   const [profile, setProfile] = useState<any>(null)
-  const [plan, setPlan] = useState<any>(null)
+  const [academicAudit, setAcademicAudit] = useState<any>(null)
   const [loading, setLoading] = useState(true)
   const [tasks, setTasks] = useState<Record<string, boolean>>({})
   const [opportunities, setOpportunities] = useState<any>(null)
@@ -25,7 +26,42 @@ export default function Dashboard() {
       setUser(user)
       const { data } = await supabase.from('profiles').select('*').eq('id', user.id).single()
       setProfile(data)
-      if (data?.plan) setPlan(data.plan)
+      if (data?.tasks) {
+      setTasks(data.tasks)
+    }
+    
+      if (data?.academic_audit) {
+        setAcademicAudit(data.academic_audit)
+      } else if (data?.answers) {
+        setAuditLoading(true)
+
+        const res = await fetch('/api/generate', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            answers: data.answers,
+            type: 'academic_audit',
+          }),
+        })
+
+        const auditData = await res.json()
+
+        if (!auditData.error) {
+          setAcademicAudit(auditData)
+
+          await supabase
+            .from('profiles')
+            .update({
+              academic_audit: auditData,
+              audit_status: 'completed',
+              updated_at: new Date().toISOString(),
+            })
+            .eq('id', user.id)
+        }
+
+        setAuditLoading(false)
+      }
+
       if (data?.roadmap) setRoadmap(data.roadmap)
       if (data?.opportunities) setOpportunities(data.opportunities)
       setLoading(false)
@@ -33,9 +69,26 @@ export default function Dashboard() {
     load()
   }, [])
 
-  function toggleTask(key: string) {
-    setTasks(prev => ({ ...prev, [key]: !prev[key] }))
+  async function toggleTask(key: string) {
+  const updated = {
+    ...tasks,
+    [key]: !tasks[key]
   }
+
+  setTasks(updated)
+
+  const { data: { user } } = await supabase.auth.getUser()
+
+  if (user) {
+    await supabase
+      .from('profiles')
+      .update({
+        tasks: updated,
+        updated_at: new Date().toISOString()
+      })
+      .eq('id', user.id)
+  }
+}
 
   async function generateRoadmap() {
     setRoadmapLoading(true)
@@ -64,11 +117,21 @@ export default function Dashboard() {
 
   const name = user?.user_metadata?.full_name?.split(' ')[0] || 'there'
   const hasAnswers = profile?.answers
-  const schedule: string[] = plan?.schedule || []
-  const goals: string[] = plan?.goals || []
-  const completedTasks = Object.values(tasks).filter(Boolean).length
-  const totalTasks = schedule.length
-  const progressPct = totalTasks > 0 ? Math.round((completedTasks / totalTasks) * 100) : 0
+
+  const priorityActions: string[] = academicAudit?.priority_actions || []
+  const strengths: string[] = academicAudit?.strengths || []
+  const weaknesses: string[] = academicAudit?.weaknesses || []
+  const collegeFit = academicAudit?.college_fit || []
+  const competitiveness = academicAudit?.competitiveness || []
+  const summerOpportunities = academicAudit?.summer_opportunities || []
+
+  const completedActionCount = priorityActions.filter((_, i) => tasks[`action-${i}`]).length
+  const totalActionCount = priorityActions.length
+  const actionProgressPct =
+    totalActionCount > 0
+      ? Math.round((completedActionCount / totalActionCount) * 100)
+      : 0
+
   const hour = new Date().getHours()
   const greeting = hour < 12 ? 'Good morning' : hour < 17 ? 'Good afternoon' : 'Good evening'
 
@@ -84,9 +147,9 @@ export default function Dashboard() {
 
       {/* Nav */}
       <nav className="bg-white border-b border-stone-100 sticky top-0 z-50">
-        <div className="max-w-7xl mx-auto px-8 py-3.5 flex items-center justify-between">
+        <div className="max-w-7xl mx-auto px-4 md:px-8 py-3.5 flex items-center justify-between">
           <span className="brand text-2xl text-stone-900">Guideway</span>
-          <div className="flex items-center gap-1">
+          <div className="hidden md:flex items-center gap-1">
             {[
               { label: 'Dashboard', href: '/dashboard' },
               { label: 'My Plan', href: '/plan' },
@@ -129,16 +192,54 @@ export default function Dashboard() {
           <button onClick={() => router.push('/onboarding')} className="bg-[#4a7c59] text-white px-8 py-4 rounded-xl font-semibold hover:bg-[#3d6849] transition">Build my plan →</button>
         </div>
       ) : (
-        <div className="max-w-7xl mx-auto px-8 py-8">
+        <div className="max-w-7xl mx-auto px-4 md:px-8 py-8">
 
           {/* Header */}
           <div className="mb-8">
             <p className="text-sm text-stone-400 mb-1">{greeting},</p>
-            <h1 className="brand text-5xl text-stone-900">{name}.</h1>
+            <h1 className="brand text-3xl md:text-5xl text-stone-900">{name}.</h1>
           </div>
 
           {/* Top stats row */}
-          <div className="grid grid-cols-4 gap-4 mb-6">
+          {profile?.academic_audit?.weekly_summary && (
+          <div className="mb-6 rounded-2xl p-4 md:p-6 border border-[#d4e4d9] bg-[#f0f5f1]">
+            <p className="text-xs font-bold text-[#4a7c59] uppercase tracking-widest mb-2">
+              This week’s update
+            </p>
+
+            <p className="text-sm text-stone-700 leading-relaxed mb-4">
+              {profile.academic_audit.weekly_summary}
+            </p>
+
+            {profile.academic_audit.weekly_motivation && (
+              <div className="bg-white border border-[#d4e4d9] rounded-xl px-4 py-3">
+                <p className="text-xs text-stone-500 mb-1">Focus</p>
+                <p className="text-sm font-medium text-[#4a7c59]">
+                  {profile.academic_audit.weekly_motivation}
+                </p>
+              </div>
+            )}
+
+            {profile.academic_audit.priority_actions?.length > 0 && (
+            <div className="mt-4">
+              <p className="text-xs font-semibold text-stone-400 mb-2">
+                Updated priorities
+              </p>
+
+              <div className="flex flex-col gap-1.5">
+                {profile.academic_audit.priority_actions
+                  .slice(0, 2)
+                  .map((action: string, i: number) => (
+                    <div key={i} className="text-xs text-stone-600">
+                      → {action}
+                    </div>
+                  ))}
+              </div>
+            </div>
+          )}
+          </div>
+        )}
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-6">
             {[
               { label: 'Grade', value: profile.answers.grade?.replace(' grade', '') || '—', sub: 'Current grade' },
               { label: 'GPA', value: profile.answers.gpa || '—', sub: 'Self-reported' },
@@ -147,16 +248,151 @@ export default function Dashboard() {
             ].map(({ label, value, sub, alert }) => (
               <div key={label} className={`card px-5 py-4 ${alert ? 'border-red-100 bg-red-50/30' : ''}`}>
                 <p className="text-xs font-semibold text-stone-400 uppercase tracking-widest mb-1">{label}</p>
-                <p className={`brand text-3xl mb-0.5 ${alert ? 'text-red-400' : 'text-stone-900'}`}>{value}</p>
+                <p className={`brand text-2xl md:text-3xl mb-0.5 ${alert ? 'text-red-400' : 'text-stone-900'}`}>{value}</p>
                 <p className="text-xs text-stone-400">{sub}</p>
               </div>
             ))}
           </div>
 
-          <div className="grid grid-cols-3 gap-6">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
 
             {/* Left — main content */}
-            <div className="col-span-2 flex flex-col gap-5">
+            <div className="md:col-span-2 flex flex-col gap-5">
+
+
+              {/* Weekly schedule */}
+              <div className="card p-6 hover-card">
+                <div className="flex items-center justify-between mb-5">
+                  <div>
+                    <h2 className="text-base font-semibold text-stone-900">
+                      Your Academic Audit
+                    </h2>
+                    <p className="text-xs text-stone-400 mt-0.5">
+                      Personalized analysis based on your profile
+                    </p>
+                  </div>
+
+                  {profile?.academic_audit?.weekly_summary && (
+                    <span className="text-[10px] font-semibold uppercase tracking-widest text-[#4a7c59] bg-[#f0f5f1] border border-[#d4e4d9] px-2.5 py-1 rounded-full">
+                      Updated this week
+                    </span>
+                  )}
+                </div>
+
+                {!academicAudit ? (
+                  <div className="text-center py-8 bg-stone-50 rounded-xl">
+                  {auditLoading ? (
+                    <>
+                      <div className="w-6 h-6 border-2 border-[#4a7c59] border-t-transparent rounded-full animate-spin mx-auto mb-3" />
+                      <p className="text-sm text-stone-400 mb-1">
+                        Running your academic audit...
+                      </p>
+                      <p className="text-xs text-stone-300">
+                        Analyzing your profile, strengths, and next steps.
+                      </p>
+                    </>
+                  ) : (
+                    <>
+                      <p className="text-sm text-stone-400 mb-3">
+                        Your audit is being prepared.
+                      </p>
+                      <p className="text-xs text-stone-300">
+                        This is where Guideway becomes powerful.
+                      </p>
+                    </>
+                  )}
+                </div>
+                ) : (
+                  <div className="space-y-6">
+
+                    <div>
+                      <p className="text-xs font-bold text-stone-400 uppercase tracking-widest mb-3">
+                        Strengths
+                      </p>
+                      <div className="space-y-2">
+                        {strengths.map((item: string, i: number) => (
+                          <div key={i} className="p-3 rounded-xl bg-[#f0f5f1] border border-[#d4e4d9] text-sm text-stone-700">
+                            {item}
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+
+                    <div>
+                      <p className="text-xs font-bold text-stone-400 uppercase tracking-widest mb-3">
+                        Weaknesses
+                      </p>
+                      <div className="space-y-2">
+                        {weaknesses.map((item: string, i: number) => (
+                          <div key={i} className="p-3 rounded-xl bg-[#fafaf9] border border-stone-100 text-sm text-stone-700">
+                            {item}
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+
+                    <div>
+                    <p className="text-xs font-bold text-stone-400 uppercase tracking-widest mb-3">
+                      Priority Actions
+                    </p>
+
+                    <div className="flex items-center gap-2 mb-3">
+                      <div className="flex-1 bg-stone-100 rounded-full h-1.5 overflow-hidden">
+                        <div
+                          className="bg-[#4a7c59] h-1.5 rounded-full transition-all duration-500"
+                          style={{ width: `${actionProgressPct}%` }}
+                        />
+                      </div>
+                      <span className="text-xs text-stone-400">
+                        {completedActionCount}/{totalActionCount}
+                      </span>
+                    </div>
+
+                    {priorityActions.length > 0 && (
+                      <div className="mb-4 p-4 rounded-xl bg-[#4a7c59] text-white">
+                        <p className="text-xs uppercase opacity-80 mb-1">Start here</p>
+                        <p className="text-sm font-semibold">{priorityActions[0]}</p>
+                      </div>
+                    )}
+
+                    <div className="space-y-2">
+                      {priorityActions.map((item: string, i: number) => {
+                        const key = `action-${i}`
+                        const done = tasks[key]
+
+                        return (
+                          <div
+                            key={i}
+                            onClick={() => toggleTask(key)}
+                            className={`flex items-center gap-3 p-4 min-h-[52px] rounded-xl cursor-pointer transition ${
+                            done
+                              ? 'bg-[#f0f5f1]'
+                              : i < 2
+                              ? 'bg-[#f8fbf8] border border-[#d4e4d9] hover:border-[#4a7c59]'
+                              : 'bg-white border border-stone-100 hover:border-[#4a7c59]'
+                          }`}
+                          >
+                            <div
+                              className={`w-5 h-5 rounded-full border-2 flex items-center justify-center ${
+                                done ? 'bg-[#4a7c59] border-[#4a7c59]' : 'border-stone-200'
+                              }`}
+                            >
+                              {done && <span className="text-white text-xs">✓</span>}
+                            </div>
+
+                            <p className={`text-sm ${done ? 'line-through text-stone-400' : 'text-stone-700'}`}>
+                              {item}
+                            </p>
+                          </div>
+                        )
+                      })}
+                    </div>
+                  </div>
+
+                  </div>
+                )}
+              </div>
+
 
               {/* Check-in banner */}
               <div className="rounded-2xl p-6 flex items-center justify-between" style={{ background: 'linear-gradient(135deg, #4a7c59 0%, #3d6849 100%)' }}>
@@ -173,53 +409,6 @@ export default function Dashboard() {
                 </button>
               </div>
 
-              {/* Weekly schedule */}
-              <div className="card p-6 hover-card">
-                <div className="flex items-center justify-between mb-5">
-                  <div>
-                    <h2 className="text-base font-semibold text-stone-900">This week's schedule</h2>
-                    <p className="text-xs text-stone-400 mt-0.5">{completedTasks} of {totalTasks} completed</p>
-                  </div>
-                  <div className="flex items-center gap-2">
-                    <div className="w-20 bg-stone-100 rounded-full h-1.5 overflow-hidden">
-                      <div className="bg-[#4a7c59] h-1.5 rounded-full transition-all duration-500" style={{ width: `${progressPct}%` }} />
-                    </div>
-                    <span className="text-xs font-semibold text-stone-500">{progressPct}%</span>
-                  </div>
-                </div>
-
-                {schedule.length === 0 ? (
-                  <div className="text-center py-8 bg-stone-50 rounded-xl">
-                    <p className="text-sm text-stone-400 mb-3">No schedule yet.</p>
-                    <button onClick={() => router.push('/plan')} className="text-xs font-semibold text-[#4a7c59] hover:underline">Generate your plan →</button>
-                  </div>
-                ) : (
-                  <div className="flex flex-col gap-2">
-                    {schedule.map((item: string, i: number) => {
-                      const key = `task-${i}`
-                      const done = tasks[key]
-                      return (
-                        <div
-                          key={i}
-                          onClick={() => toggleTask(key)}
-                          className={`flex items-center gap-3 p-3.5 rounded-xl cursor-pointer transition-all group ${done ? 'bg-[#f0f5f1]' : 'bg-[#fafaf9] hover:bg-stone-50 border border-transparent hover:border-stone-100'}`}
-                        >
-                          <div className={`w-5 h-5 rounded-full border-2 flex-shrink-0 flex items-center justify-center transition-all ${done ? 'bg-[#4a7c59] border-[#4a7c59]' : 'border-stone-200 group-hover:border-[#4a7c59]'}`}>
-                            {done && <svg width="9" height="9" viewBox="0 0 9 9" fill="none"><path d="M1.5 4.5l2 2 4-4" stroke="white" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/></svg>}
-                          </div>
-                          <p className={`text-sm transition-all flex-1 ${done ? 'text-stone-400 line-through' : 'text-stone-700'}`}>{item}</p>
-                        </div>
-                      )
-                    })}
-                  </div>
-                )}
-
-                {plan && (
-                  <button onClick={() => router.push('/plan')} className="mt-4 text-xs text-[#4a7c59] font-medium hover:underline flex items-center gap-1">
-                    View full plan →
-                  </button>
-                )}
-              </div>
 
               {/* Opportunities preview */}
               <div className="card p-6 hover-card">
@@ -358,28 +547,46 @@ export default function Dashboard() {
                 </div>
               </div>
 
-              {/* Monthly goals */}
+              {/* College competitiveness */}
               <div className="card p-5">
-                <p className="text-xs font-bold text-stone-400 uppercase tracking-widest mb-4">Monthly goals</p>
-                {goals.length === 0 ? (
-                  <p className="text-sm text-stone-300 text-center py-4">Generate your plan to see goals.</p>
+                <p className="text-xs font-bold text-stone-400 uppercase tracking-widest mb-4">
+                  College competitiveness
+                </p>
+
+                {competitiveness.length === 0 ? (
+                  <p className="text-sm text-stone-300 text-center py-4">
+                    Your competitiveness analysis will appear here.
+                  </p>
                 ) : (
-                  <div className="flex flex-col gap-4">
-                    {goals.map((goal: string, i: number) => {
-                      const pcts = [15, 35, 10]
-                      const pct = pcts[i] || 20
-                      return (
-                        <div key={i}>
-                          <p className="text-xs text-stone-600 leading-snug mb-2">{goal.length > 60 ? goal.slice(0, 60) + '...' : goal}</p>
-                          <div className="flex items-center gap-2">
-                            <div className="flex-1 bg-stone-100 rounded-full h-1.5 overflow-hidden">
-                              <div className="bg-[#4a7c59] h-1.5 rounded-full" style={{ width: `${pct}%` }} />
-                            </div>
-                            <span className="text-[10px] font-semibold text-stone-400">{pct}%</span>
-                          </div>
+                  <div className="flex flex-col gap-3">
+                    {competitiveness.map((item: any, i: number) => (
+                      <div key={i} className="p-3 rounded-xl bg-stone-50 border border-stone-100">
+                        <div className="flex items-center justify-between gap-3 mb-1.5">
+                          <p className="text-sm font-semibold text-stone-700">
+                            {item.school}
+                          </p>
+                          <span
+                            className={`text-[10px] font-semibold uppercase tracking-widest px-2 py-1 rounded-full ${
+                              item.level === 'Reach'
+                                ? 'bg-red-50 text-red-500 border border-red-100'
+                                : item.level === 'Target'
+                                ? 'bg-amber-50 text-amber-600 border border-amber-100'
+                                : 'bg-[#f0f5f1] text-[#4a7c59] border border-[#d4e4d9]'
+                            }`}
+                          >
+                            {item.level}
+                          </span>
                         </div>
-                      )
-                    })}
+
+                        <p className="text-xs text-stone-500 leading-relaxed mb-2">
+                          {item.reason}
+                        </p>
+
+                        <p className="text-xs text-[#4a7c59] leading-relaxed">
+                          Improve: {item.improve}
+                        </p>
+                      </div>
+                    ))}
                   </div>
                 )}
               </div>

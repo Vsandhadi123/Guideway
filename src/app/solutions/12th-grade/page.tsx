@@ -33,7 +33,7 @@ export default function TwelfthGrade() {
             Senior year
           </div>
           <h1 className="brand text-6xl text-stone-900 leading-tight mb-5">Finish strong. <em>Land where you want to be.</em></h1>
-          <p className="text-lg text-stone-400 leading-relaxed mb-8">Senior year isn't the time to coast. Applications, deadlines, essays, and decisions — all while keeping your GPA up. Guideway keeps you organized and on track through the finish line.</p>
+          <p className="text-lg text-stone-400 leading-relaxed mb-8">Senior year isn&apos;t the time to coast. Applications, deadlines, essays, and decisions — all while keeping your GPA up. Guideway keeps you organized and on track through the finish line.</p>
           <Link href="/signup" className="inline-block bg-[#4a7c59] text-white px-6 py-3 rounded-xl text-sm font-semibold hover:bg-[#3d6849] transition">Get my 12th grade plan →</Link>
         </div>
       </section>
@@ -42,14 +42,14 @@ export default function TwelfthGrade() {
         <div className="grid grid-cols-2 gap-24">
           <div>
             <p className="text-xs font-semibold text-stone-400 uppercase tracking-widest mb-4">Why senior year still matters</p>
-            <h2 className="brand text-5xl text-stone-900 leading-tight mb-6">Senior slide is real. Don't let it happen.</h2>
+            <h2 className="brand text-5xl text-stone-900 leading-tight mb-6">Senior slide is real. Don&apos;t let it happen.</h2>
             <p className="text-stone-400 leading-relaxed mb-6">Colleges rescind acceptances for senior slide. Scholarship deadlines pass without warning. Essays get rushed. Guideway keeps you accountable through the most distracted year of high school.</p>
             <p className="text-stone-400 leading-relaxed">Whether you're applying to 5 schools or 15, Guideway builds a timeline that gets everything submitted on time and done well.</p>
           </div>
           <div className="flex flex-col gap-5">
             {[
               { title: 'Application timeline', desc: 'EA, ED, RD deadlines — all mapped out with milestones so nothing sneaks up on you.' },
-              { title: 'Essay planning', desc: 'Your plan includes essay brainstorming and drafting milestones so you\'re not writing at midnight before deadlines.' },
+              { title: 'Essay planning', desc: 'Your plan includes essay brainstorming and drafting milestones so you&apos;re not writing at midnight before deadlines.' },
               { title: 'Scholarship tracking', desc: 'We surface scholarship opportunities matched to your profile and keep their deadlines on your radar.' },
               { title: 'Senior GPA maintenance', desc: 'Your plan keeps academics from slipping while you manage applications simultaneously.' },
             ].map(({ title, desc }) => (
