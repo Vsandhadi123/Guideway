@@ -63,7 +63,7 @@ export default function Login() {
 
           {error && <p className="text-xs text-red-400">{error}</p>}
           <div className="text-right">
-            <Link href="/forgot-password" className="text-xs text-stone-400 hover:text-[#4a7c59] transition">Forgot password?</Link>
+            <Link href="/forgot-password" className="text-xs text-stone-500 hover:text-[#4a7c59] transition">Forgot password?</Link>
           </div>
 
           <button
@@ -75,7 +75,7 @@ export default function Login() {
           </button>
         </div>
 
-        <p className="text-center text-xs text-stone-400 mt-6">
+        <p className="text-center text-xs text-stone-500 mt-6">
           Don&apos;t have an account?{' '}
           <Link href="/signup" className="text-[#4a7c59] font-medium hover:underline">Sign up</Link>
         </p>

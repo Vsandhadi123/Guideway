@@ -73,7 +73,7 @@ export default function ForgotPassword() {
               </button>
             </div>
 
-            <p className="text-center text-xs text-stone-400 mt-6">
+            <p className="text-center text-xs text-stone-500 mt-6">
               Remember it?{' '}
               <Link href="/login" className="text-[#4a7c59] font-medium hover:underline">Log in</Link>
             </p>

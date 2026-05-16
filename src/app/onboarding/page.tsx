@@ -451,7 +451,7 @@ export default function Onboarding() {
               />
             ))}
           </div>
-          <span className="text-xs text-stone-400">{current + 1} of {steps.length}</span>
+          <span className="text-xs text-stone-500">{current + 1} of {steps.length}</span>
         </div>
       </div>
 

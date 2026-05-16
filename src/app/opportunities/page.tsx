@@ -139,7 +139,7 @@ export default function Opportunities() {
               {activeItems.map((item: any, i: number) => (
                 <div key={i} className="bg-white rounded-2xl border border-stone-100 p-6 hover:border-[#c8dace] hover:shadow-md transition-all duration-200">
                   <h3 className="text-sm font-semibold text-stone-900 mb-2">{item.name}</h3>
-                  <p className="text-xs text-stone-400 leading-relaxed mb-4">{item.desc}</p>
+                  <p className="text-xs text-stone-500 leading-relaxed mb-4">{item.desc}</p>
                   <div className="flex flex-col gap-1.5">
                     {item.deadline && (
                       <div className="flex items-center gap-2">

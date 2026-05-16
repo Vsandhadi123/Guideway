@@ -31,7 +31,7 @@ export default function Extracurriculars() {
 
       <section className="max-w-5xl mx-auto px-8 pt-20 pb-12">
         <div className="flex items-center gap-2 mb-6">
-          <Link href="/" className="text-xs text-stone-400 hover:text-stone-600 transition">Guideway</Link>
+          <Link href="/" className="text-xs text-stone-500 hover:text-stone-600 transition">Guideway</Link>
           <span className="text-stone-200">/</span>
           <span className="text-xs text-stone-600">Extracurriculars</span>
         </div>

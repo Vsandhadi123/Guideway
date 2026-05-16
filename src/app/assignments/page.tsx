@@ -39,7 +39,7 @@ function DueBadge({ dateStr }: { dateStr: string }) {
   if (days < 0) return <span className="text-xs font-semibold text-red-400">Overdue</span>
   if (days === 0) return <span className="text-xs font-semibold text-red-400">Due today</span>
   if (days === 1) return <span className="text-xs font-semibold text-amber-400">Due tomorrow</span>
-  return <span className="text-xs text-stone-400">Due in {days} days</span>
+  return <span className="text-xs text-stone-500">Due in {days} days</span>
 }
 
 export default function Assignments() {
@@ -225,7 +225,7 @@ export default function Assignments() {
                 <div className="flex-1 min-w-0">
                   <p className={`text-sm font-medium ${a.done ? 'line-through text-stone-400' : 'text-stone-800'}`}>{a.title}</p>
                   <div className="flex items-center gap-3 mt-1">
-                    {a.subject && <span className="text-xs text-stone-400">{a.subject}</span>}
+                    {a.subject && <span className="text-xs text-stone-500">{a.subject}</span>}
                     {a.due_date && !a.done && <DueBadge dateStr={a.due_date} />}
                   </div>
                 </div>

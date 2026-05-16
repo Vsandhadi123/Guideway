@@ -150,7 +150,7 @@ export default function Plan() {
                 { label: 'Goal', value: profile.answers.goals?.[0] || '—' },
               ].map(({ label, value }) => (
                 <div key={label}>
-                  <p className="text-xs text-stone-400 mb-0.5">{label}</p>
+                  <p className="text-xs text-stone-500 mb-0.5">{label}</p>
                   <p className="text-sm font-semibold text-stone-700 truncate max-w-32">{value}</p>
                 </div>
               ))}
@@ -170,7 +170,7 @@ export default function Plan() {
                     setPlan(data)
                     setLoading(false)
                   }}
-                  className="text-xs text-stone-400 border border-stone-200 px-3 py-1.5 rounded-lg hover:border-stone-300 transition"
+                  className="text-xs text-stone-500 border border-stone-200 px-3 py-1.5 rounded-lg hover:border-stone-300 transition"
                 >
                   Regenerate plan
                 </button>
@@ -202,10 +202,10 @@ export default function Plan() {
               </div>
 
               <div className="mt-4 pt-4 border-t border-stone-100 flex flex-col gap-1">
-                <button onClick={() => router.push('/dashboard')} className="w-full text-left flex items-center gap-3 px-3 py-2.5 rounded-xl hover:bg-stone-50 transition text-xs text-stone-400 font-medium">
+                <button onClick={() => router.push('/dashboard')} className="w-full text-left flex items-center gap-3 px-3 py-2.5 rounded-xl hover:bg-stone-50 transition text-xs text-stone-500 font-medium">
                   ← Dashboard
                 </button>
-                <button onClick={() => router.push('/checkin')} className="w-full text-left flex items-center gap-3 px-3 py-2.5 rounded-xl hover:bg-stone-50 transition text-xs text-stone-400 font-medium">
+                <button onClick={() => router.push('/checkin')} className="w-full text-left flex items-center gap-3 px-3 py-2.5 rounded-xl hover:bg-stone-50 transition text-xs text-stone-500 font-medium">
                   Weekly check-in →
                 </button>
               </div>
@@ -224,7 +224,7 @@ export default function Plan() {
                     </div>
                     <div>
                       <h2 className="brand text-2xl text-stone-900">{activeData.title}</h2>
-                      <p className="text-xs text-stone-400 mt-0.5">Personalized to your profile</p>
+                      <p className="text-xs text-stone-500 mt-0.5">Personalized to your profile</p>
                     </div>
                   </div>
                 </div>
@@ -266,7 +266,7 @@ export default function Plan() {
                       if (idx > 0) setActiveSection(SECTIONS[idx - 1].key)
                     }}
                     disabled={SECTIONS.findIndex(s => s.key === activeSection) === 0}
-                    className="text-xs text-stone-400 hover:text-stone-600 transition disabled:opacity-30"
+                    className="text-xs text-stone-500 hover:text-stone-600 transition disabled:opacity-30"
                   >
                     ← Previous section
                   </button>
@@ -285,7 +285,7 @@ export default function Plan() {
                       if (idx < SECTIONS.length - 1) setActiveSection(SECTIONS[idx + 1].key)
                     }}
                     disabled={SECTIONS.findIndex(s => s.key === activeSection) === SECTIONS.length - 1}
-                    className="text-xs text-stone-400 hover:text-stone-600 transition disabled:opacity-30"
+                    className="text-xs text-stone-500 hover:text-stone-600 transition disabled:opacity-30"
                   >
                     Next section →
                   </button>

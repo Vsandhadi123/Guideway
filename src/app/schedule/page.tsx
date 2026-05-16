@@ -198,8 +198,8 @@ export default function Schedule() {
                 <div className="flex-1">
                   <p className="text-sm font-semibold text-stone-800">{c.name}</p>
                   <div className="flex items-center gap-3 mt-1">
-                    {c.teacher && <span className="text-xs text-stone-400">{c.teacher}</span>}
-                    {c.room && <span className="text-xs text-stone-400">Room {c.room}</span>}
+                    {c.teacher && <span className="text-xs text-stone-500">{c.teacher}</span>}
+                    {c.room && <span className="text-xs text-stone-500">Room {c.room}</span>}
                   </div>
                 </div>
                 <div className="text-right flex-shrink-0">
@@ -207,7 +207,7 @@ export default function Schedule() {
                     <p className="text-sm font-semibold text-stone-700">{c.start_time}</p>
                   )}
                   {c.end_time && (
-                    <p className="text-xs text-stone-400">{c.end_time}</p>
+                    <p className="text-xs text-stone-500">{c.end_time}</p>
                   )}
                 </div>
                 <button onClick={() => deleteClass(c.id)} className="text-stone-200 hover:text-red-400 transition ml-2">

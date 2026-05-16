@@ -42,7 +42,7 @@ function StudyPlanMockup() {
               <span className="text-[#4a7c59] text-sm mt-0.5 flex-shrink-0">→</span>
               <div>
                 <p className="text-xs font-semibold text-stone-800 mb-0.5">{item.title}</p>
-                <p className="text-xs text-stone-400 leading-relaxed">{item.desc}</p>
+                <p className="text-xs text-stone-500 leading-relaxed">{item.desc}</p>
               </div>
             </div>
           ))}
@@ -76,9 +76,9 @@ export default function AIStudyPlan() {
       {/* Hero */}
       <section className="max-w-5xl mx-auto px-8 pt-20 pb-12">
         <div className="flex items-center gap-2 mb-6">
-          <Link href="/" className="text-xs text-stone-400 hover:text-stone-600 transition">Guideway</Link>
+          <Link href="/" className="text-xs text-stone-500 hover:text-stone-600 transition">Guideway</Link>
           <span className="text-stone-200">/</span>
-          <Link href="/#features" className="text-xs text-stone-400 hover:text-stone-600 transition">Features</Link>
+          <Link href="/#features" className="text-xs text-stone-500 hover:text-stone-600 transition">Features</Link>
           <span className="text-stone-200">/</span>
           <span className="text-xs text-stone-600">AI Study Plan</span>
         </div>
@@ -192,7 +192,7 @@ export default function AIStudyPlan() {
             ].map(({ stat, label }) => (
               <div key={label} className="border border-stone-100 rounded-2xl p-6 hover:border-[#d4e4d9] transition">
                 <p className="brand text-4xl text-stone-900 mb-2">{stat}</p>
-                <p className="text-xs text-stone-400 leading-snug">{label}</p>
+                <p className="text-xs text-stone-500 leading-snug">{label}</p>
               </div>
             ))}
           </div>

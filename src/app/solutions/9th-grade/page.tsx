@@ -30,9 +30,9 @@ export default function NinthGrade() {
 
       <section className="max-w-5xl mx-auto px-8 pt-20 pb-12">
         <div className="flex items-center gap-2 mb-6">
-          <Link href="/" className="text-xs text-stone-400 hover:text-stone-600 transition">Guideway</Link>
+          <Link href="/" className="text-xs text-stone-500 hover:text-stone-600 transition">Guideway</Link>
           <span className="text-stone-200">/</span>
-          <Link href="/#features" className="text-xs text-stone-400 hover:text-stone-600 transition">Solutions</Link>
+          <Link href="/#features" className="text-xs text-stone-500 hover:text-stone-600 transition">Solutions</Link>
           <span className="text-stone-200">/</span>
           <span className="text-xs text-stone-600">9th Grade</span>
         </div>
@@ -45,7 +45,7 @@ export default function NinthGrade() {
             Start strong. <em>Build the habits that last.</em>
           </h1>
           <p className="text-lg text-stone-400 leading-relaxed mb-8">
-            9th grade sets the tone for everything that follows. Most students don&apos;t realize this until it&apos;s too late. Guideway helps you build the systems, habits, and mindset that make the next 3 years easier.
+            9th grade sets the tone for everything that follows. Most students don't realize this until it's too late. Guideway helps you build the systems, habits, and mindset that make the next 3 years easier.
           </p>
           <Link href="/signup" className="inline-block bg-[#4a7c59] text-white px-6 py-3 rounded-xl text-sm font-semibold hover:bg-[#3d6849] transition">
             Get my 9th grade plan →
@@ -64,7 +64,7 @@ export default function NinthGrade() {
               Freshman year GPA counts. The habits you build now — how you study, how you manage time, how you handle stress — will carry you through AP classes, college apps, and beyond.
             </p>
             <p className="text-stone-400 leading-relaxed">
-              Most 9th graders wing it. The ones who don&apos;t end up years ahead. Guideway gives you a real plan from day one.
+              Most 9th graders wing it. The ones who don't end up years ahead. Guideway gives you a real plan from day one.
             </p>
           </div>
           <div className="flex flex-col gap-5">
@@ -101,7 +101,7 @@ export default function NinthGrade() {
           ].map(({ title, desc }) => (
             <div key={title} className="bg-[#fafaf9] border border-stone-100 rounded-2xl p-6 hover:border-[#d4e4d9] transition">
               <h3 className="text-sm font-semibold text-stone-900 mb-2">{title}</h3>
-              <p className="text-xs text-stone-400 leading-relaxed">{desc}</p>
+              <p className="text-xs text-stone-500 leading-relaxed">{desc}</p>
             </div>
           ))}
         </div>

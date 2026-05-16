@@ -252,7 +252,7 @@ export default function Pricing() {
           {districtOpen && submitted && (
             <div className="mt-8 pt-8 border-t border-stone-100 text-center py-6">
               <p className="text-sm font-semibold text-stone-900 mb-1">Thanks! We will be in touch within 2 business days.</p>
-              <p className="text-xs text-stone-400">We are excited to bring Guideway to your students.</p>
+              <p className="text-xs text-stone-500">We are excited to bring Guideway to your students.</p>
             </div>
           )}
         </div>

@@ -241,7 +241,7 @@ export default function Home() {
                           </div>
                           <div>
                             <span className="text-sm font-semibold text-stone-800 group-hover/item:text-[#4a7c59] transition block">{title}</span>
-                            <span className="text-xs text-stone-400">{desc}</span>
+                            <span className="text-xs text-stone-500">{desc}</span>
                           </div>
                         </Link>
                       ))}
@@ -412,7 +412,7 @@ export default function Home() {
                 <div key={title} className="bg-[#fafaf9] border border-stone-100 rounded-2xl p-5 hover:border-[#d4e4d9] transition">
                   <div className="w-2 h-2 rounded-full bg-[#4a7c59] mb-3" />
                   <h3 className="text-sm font-semibold text-stone-900 mb-2">{title}</h3>
-                  <p className="text-xs text-stone-400 leading-relaxed">{desc}</p>
+                  <p className="text-xs text-stone-500 leading-relaxed">{desc}</p>
                 </div>
               ))}
             </div>
@@ -439,7 +439,7 @@ export default function Home() {
               ].map(({ num, label }) => (
                 <div key={label} className="border border-stone-100 rounded-2xl p-6 hover:border-[#d4e4d9] hover:bg-[#fafaf9] transition">
                   <p className="brand text-4xl text-stone-900 mb-1">{num}</p>
-                  <p className="text-xs text-stone-400">{label}</p>
+                  <p className="text-xs text-stone-500">{label}</p>
                 </div>
               ))}
             </div>

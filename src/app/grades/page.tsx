@@ -203,11 +203,11 @@ export default function Grades() {
               </div>
               {form.grade && (
                 <div className="flex items-center gap-2 bg-stone-50 rounded-xl px-4 py-2.5">
-                  <span className="text-xs text-stone-400">Letter grade:</span>
+                  <span className="text-xs text-stone-500">Letter grade:</span>
                   <span className={`text-xs font-bold px-2 py-0.5 rounded-lg border ${getGradeColor(getLetterGrade(parseFloat(form.grade)))}`}>
                     {getLetterGrade(parseFloat(form.grade))}
                   </span>
-                  <span className="text-xs text-stone-400 ml-1">({getGradePoints(getLetterGrade(parseFloat(form.grade))).toFixed(1)} points)</span>
+                  <span className="text-xs text-stone-500 ml-1">({getGradePoints(getLetterGrade(parseFloat(form.grade))).toFixed(1)} points)</span>
                 </div>
               )}
               <div className="flex gap-3">
@@ -238,7 +238,7 @@ export default function Grades() {
                       </div>
                       <div className="flex-1">
                         <p className="text-sm font-semibold text-stone-800">{g.subject}</p>
-                        <p className="text-xs text-stone-400 mt-0.5">{g.grade}% · {g.credits} credit{g.credits !== 1 ? 's' : ''} · {getGradePoints(g.letter_grade).toFixed(1)} pts</p>
+                        <p className="text-xs text-stone-500 mt-0.5">{g.grade}% · {g.credits} credit{g.credits !== 1 ? 's' : ''} · {getGradePoints(g.letter_grade).toFixed(1)} pts</p>
                       </div>
                       <button onClick={() => deleteGrade(g.id)} className="text-stone-200 hover:text-red-400 transition">
                         <svg width="14" height="14" viewBox="0 0 14 14" fill="none">

@@ -289,7 +289,7 @@ export default function CheckIn() {
               />
             ))}
           </div>
-          <span className="text-xs text-stone-400 font-medium">{current + 1} of {steps.length}</span>
+          <span className="text-xs text-stone-500 font-medium">{current + 1} of {steps.length}</span>
         </div>
       </div>
 

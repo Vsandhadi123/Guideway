@@ -16,6 +16,7 @@ export default function Dashboard() {
   const [academicAudit, setAcademicAudit] = useState<any>(null)
   const [loading, setLoading] = useState(true)
   const [tasks, setTasks] = useState<Record<string, boolean>>({})
+  const [showComplete, setShowComplete] = useState(false)
   const [opportunities, setOpportunities] = useState<any>(null)
   const [menuOpen, setMenuOpen] = useState(false)
 
@@ -70,12 +71,21 @@ export default function Dashboard() {
   }, [])
 
   async function toggleTask(key: string) {
+    const [showComplete, setShowComplete] = useState(false)
+    const newVal = !tasks[key]
+
   const updated = {
     ...tasks,
-    [key]: !tasks[key]
+    [key]: newVal
   }
 
   setTasks(updated)
+
+  // 🔥 small feedback (for now console, later UI)
+  if (newVal) {
+  setShowComplete(true)
+  setTimeout(() => setShowComplete(false), 1500)
+}
 
   const { data: { user } } = await supabase.auth.getUser()
 
@@ -89,6 +99,7 @@ export default function Dashboard() {
       .eq('id', user.id)
   }
 }
+
 
   async function generateRoadmap() {
     setRoadmapLoading(true)
@@ -107,7 +118,7 @@ export default function Dashboard() {
   }
 
   if (loading) return (
-    <main className="min-h-screen flex items-center justify-center bg-[#fafaf9]">
+    <main className="min-h-screen pb-20 flex items-center justify-center bg-[#fafaf9]">
       <div className="flex flex-col items-center gap-3">
         <div className="w-8 h-8 border-2 border-[#4a7c59] border-t-transparent rounded-full animate-spin" />
         <p className="text-sm text-stone-400">Loading your dashboard...</p>
@@ -123,6 +134,7 @@ export default function Dashboard() {
   const weaknesses: string[] = academicAudit?.weaknesses || []
   const collegeFit = academicAudit?.college_fit || []
   const competitiveness = academicAudit?.competitiveness || []
+  const transcriptAudit = profile?.transcript_audit || null
   const summerOpportunities = academicAudit?.summer_opportunities || []
 
   const completedActionCount = priorityActions.filter((_, i) => tasks[`action-${i}`]).length
@@ -137,6 +149,11 @@ export default function Dashboard() {
 
   return (
     <main className="min-h-screen bg-[#f7f6f3]" style={{ fontFamily: "'Inter', sans-serif" }}>
+      {showComplete && (
+      <div className="fixed bottom-24 left-1/2 -translate-x-1/2 bg-[#4a7c59] text-white px-4 py-2 rounded-xl text-sm shadow-lg z-50">
+        Task completed 🎉
+      </div>
+    )}
       <style>{`
         @import url('https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,700;1,9..144,700&family=Inter:wght@400;500;600&display=swap');
         .brand { font-family: 'Fraunces', serif; }
@@ -174,7 +191,7 @@ export default function Dashboard() {
               </button>
               {menuOpen && (
                 <div className="absolute right-0 top-full mt-2 w-48 bg-white rounded-2xl border border-stone-100 shadow-xl p-2 z-50">
-                  <p className="px-3 py-2 text-xs text-stone-400 border-b border-stone-50 mb-1 truncate">{user?.email}</p>
+                  <p className="px-3 py-2 text-xs text-stone-500 border-b border-stone-50 mb-1 truncate">{user?.email}</p>
                   <button onClick={() => { setMenuOpen(false); router.push('/tools') }} className="w-full text-left px-3 py-2 text-sm text-stone-600 hover:bg-stone-50 rounded-xl transition">Study Tools</button>
                   <button onClick={() => { setMenuOpen(false); router.push('/settings') }} className="w-full text-left px-3 py-2 text-sm text-stone-600 hover:bg-stone-50 rounded-xl transition">Settings</button>
                   <button onClick={async () => { await supabase.auth.signOut(); router.push('/') }} className="w-full text-left px-3 py-2 text-sm text-red-400 hover:bg-red-50 rounded-xl transition">Sign out</button>
@@ -247,9 +264,9 @@ export default function Dashboard() {
               { label: 'Stress', value: `${profile.answers.stress}/10`, sub: 'Current level', alert: profile.answers.stress >= 7 },
             ].map(({ label, value, sub, alert }) => (
               <div key={label} className={`card px-5 py-4 ${alert ? 'border-red-100 bg-red-50/30' : ''}`}>
-                <p className="text-xs font-semibold text-stone-400 uppercase tracking-widest mb-1">{label}</p>
+                <p className="text-xs font-semibold text-stone-500 uppercase tracking-widest mb-1">{label}</p>
                 <p className={`brand text-2xl md:text-3xl mb-0.5 ${alert ? 'text-red-400' : 'text-stone-900'}`}>{value}</p>
-                <p className="text-xs text-stone-400">{sub}</p>
+                <p className="text-xs text-stone-500">{sub}</p>
               </div>
             ))}
           </div>
@@ -267,7 +284,7 @@ export default function Dashboard() {
                     <h2 className="text-base font-semibold text-stone-900">
                       Your Academic Audit
                     </h2>
-                    <p className="text-xs text-stone-400 mt-0.5">
+                    <p className="text-xs text-stone-500 mt-0.5">
                       Personalized analysis based on your profile
                     </p>
                   </div>
@@ -343,14 +360,16 @@ export default function Dashboard() {
                           style={{ width: `${actionProgressPct}%` }}
                         />
                       </div>
-                      <span className="text-xs text-stone-400">
+                      <span className="text-xs text-stone-500">
                         {completedActionCount}/{totalActionCount}
                       </span>
                     </div>
 
                     {priorityActions.length > 0 && (
                       <div className="mb-4 p-4 rounded-xl bg-[#4a7c59] text-white">
-                        <p className="text-xs uppercase opacity-80 mb-1">Start here</p>
+                        <p className="text-xs uppercase tracking-widest opacity-80 mb-1">
+  Do this first
+</p>
                         <p className="text-sm font-semibold">{priorityActions[0]}</p>
                       </div>
                     )}
@@ -428,7 +447,7 @@ export default function Dashboard() {
                         <div className="w-2 h-2 rounded-full bg-[#4a7c59] mt-1.5 flex-shrink-0" />
                         <div>
                           <p className="text-sm font-semibold text-stone-700">{item.name}</p>
-                          <p className="text-xs text-stone-400 mt-0.5 leading-relaxed">{item.desc?.slice(0, 80)}...</p>
+                          <p className="text-xs text-stone-500 mt-0.5 leading-relaxed">{item.desc?.slice(0, 80)}...</p>
                         </div>
                       </div>
                     ))}
@@ -458,7 +477,7 @@ export default function Dashboard() {
                 {roadmapLoading && (
                   <div className="text-center py-8">
                     <div className="w-6 h-6 border-2 border-[#4a7c59] border-t-transparent rounded-full animate-spin mx-auto mb-3" />
-                    <p className="text-xs text-stone-400">Building your roadmap...</p>
+                    <p className="text-xs text-stone-500">Building your roadmap...</p>
                   </div>
                 )}
 
@@ -501,14 +520,14 @@ export default function Dashboard() {
                         <div className="flex gap-3">
                           <div className="flex-1 bg-stone-50 rounded-xl p-3 text-center border border-stone-100">
                             <p className="text-lg font-bold text-stone-800">{roadmap.test_prep.sat_target}</p>
-                            <p className="text-xs text-stone-400">SAT target</p>
+                            <p className="text-xs text-stone-500">SAT target</p>
                           </div>
                           <div className="flex-1 bg-stone-50 rounded-xl p-3 text-center border border-stone-100">
                             <p className="text-lg font-bold text-stone-800">{roadmap.test_prep.act_target}</p>
-                            <p className="text-xs text-stone-400">ACT target</p>
+                            <p className="text-xs text-stone-500">ACT target</p>
                           </div>
                         </div>
-                        <p className="text-xs text-stone-400 mt-2">{roadmap.test_prep.timeline}</p>
+                        <p className="text-xs text-stone-500 mt-2">{roadmap.test_prep.timeline}</p>
                       </div>
                     )}
                   </div>
@@ -591,6 +610,69 @@ export default function Dashboard() {
                 )}
               </div>
 
+              {/* Transcript insights */}
+              <div className="card p-5">
+                <div className="flex items-center justify-between mb-4">
+                  <p className="text-xs font-bold text-stone-400 uppercase tracking-widest">
+                    Transcript insights
+                  </p>
+                  <button
+                    onClick={() => router.push('/transcript')}
+                    className="text-xs text-[#4a7c59] hover:underline"
+                  >
+                    Update
+                  </button>
+                </div>
+
+                {!transcriptAudit ? (
+                  <div className="text-center py-6">
+                    <p className="text-sm text-stone-400 mb-3">
+                      Add your transcript to unlock insights.
+                    </p>
+                    <button
+                      onClick={() => router.push('/transcript')}
+                      className="text-xs font-semibold text-[#4a7c59] hover:underline"
+                    >
+                      Analyze transcript →
+                    </button>
+                  </div>
+                ) : (
+                  <div className="flex flex-col gap-4">
+                    <div>
+                      <p className="text-xs font-semibold text-stone-400 mb-1">GPA trend</p>
+                      <p className="text-sm text-stone-600 leading-relaxed">
+                        {transcriptAudit.gpa_summary}
+                      </p>
+                    </div>
+
+                    <div>
+                      <p className="text-xs font-semibold text-stone-400 mb-1">Course rigor</p>
+                      <p className="text-sm text-stone-600 leading-relaxed">
+                        {transcriptAudit.course_rigor}
+                      </p>
+                    </div>
+
+                    <div>
+                      <p className="text-xs font-semibold text-stone-400 mb-1">Watch out for</p>
+                      {transcriptAudit.concerns?.slice(0, 2).map((c: string, i: number) => (
+                        <p key={i} className="text-sm text-red-400">
+                          • {c}
+                        </p>
+                      ))}
+                    </div>
+
+                    <div>
+                      <p className="text-xs font-semibold text-stone-400 mb-1">Next courses</p>
+                      {transcriptAudit.recommended_next_courses?.slice(0, 2).map((c: string, i: number) => (
+                        <p key={i} className="text-sm text-[#4a7c59]">
+                          → {c}
+                        </p>
+                      ))}
+                    </div>
+                  </div>
+                )}
+              </div>
+
               {/* Profile card */}
               <div className="card p-5">
                 <div className="flex items-center justify-between mb-4">
@@ -606,7 +688,7 @@ export default function Dashboard() {
                     { label: 'Goals', value: profile.answers.goals?.[0] || '—' },
                   ].map(({ label, value }, i, arr) => (
                     <div key={label} className={`flex items-center justify-between py-2.5 ${i < arr.length - 1 ? 'border-b border-stone-50' : ''}`}>
-                      <span className="text-xs text-stone-400">{label}</span>
+                      <span className="text-xs text-stone-500">{label}</span>
                       <span className="text-xs font-semibold text-stone-700 max-w-24 truncate text-right">{value}</span>
                     </div>
                   ))}
@@ -617,6 +699,23 @@ export default function Dashboard() {
           </div>
         </div>
       )}
+      {/* Mobile bottom nav */}
+      <div className="fixed bottom-0 left-0 right-0 bg-white border-t border-stone-100 flex justify-around py-2 md:hidden z-50">
+        {[
+          { label: 'Home', href: '/dashboard' },
+          { label: 'Plan', href: '/plan' },
+          { label: 'Check-in', href: '/checkin' },
+          { label: 'Tools', href: '/tools' },
+        ].map(({ label, href }) => (
+          <button
+            key={label}
+            onClick={() => router.push(href)}
+            className="flex flex-col items-center text-xs text-stone-500"
+          >
+            <span>{label}</span>
+          </button>
+        ))}
+      </div>
     </main>
   )
 }

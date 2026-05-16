@@ -177,7 +177,7 @@ export default function Settings() {
           {/* Account */}
           <div className="bg-white rounded-2xl border border-stone-100 p-6">
             <h2 className="text-base font-semibold text-stone-900 mb-2">Account</h2>
-            <p className="text-xs text-stone-400 mb-5">Signed in as <span className="font-medium text-stone-600">{user?.email}</span></p>
+            <p className="text-xs text-stone-500 mb-5">Signed in as <span className="font-medium text-stone-600">{user?.email}</span></p>
             <div className="flex flex-col gap-3">
               <button
                 onClick={async () => { await supabase.auth.signOut(); router.push('/') }}

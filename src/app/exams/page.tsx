@@ -193,8 +193,8 @@ export default function Exams() {
                   <div className="flex-1">
                     <p className="text-sm font-semibold text-stone-800">{e.subject}</p>
                     <div className="flex items-center gap-3 mt-1">
-                      <span className="text-xs text-stone-400">{e.exam_type}</span>
-                      <span className="text-xs text-stone-400">{new Date(e.exam_date).toLocaleDateString('en-US', { month: 'short', day: 'numeric' })}</span>
+                      <span className="text-xs text-stone-500">{e.exam_type}</span>
+                      <span className="text-xs text-stone-500">{new Date(e.exam_date).toLocaleDateString('en-US', { month: 'short', day: 'numeric' })}</span>
                       {e.notes && <span className="text-xs text-stone-300 italic truncate max-w-32">{e.notes}</span>}
                     </div>
                   </div>
@@ -225,7 +225,7 @@ export default function Exams() {
                     <div className="w-12 h-12 rounded-xl flex items-center justify-center text-xs font-bold bg-stone-100 text-stone-400 flex-shrink-0">Done</div>
                     <div className="flex-1">
                       <p className="text-sm font-semibold text-stone-600">{e.subject}</p>
-                      <p className="text-xs text-stone-400 mt-0.5">{e.exam_type} · {new Date(e.exam_date).toLocaleDateString()}</p>
+                      <p className="text-xs text-stone-500 mt-0.5">{e.exam_type} · {new Date(e.exam_date).toLocaleDateString()}</p>
                     </div>
                     <button onClick={() => deleteExam(e.id)} className="text-stone-200 hover:text-red-400 transition">
                       <svg width="14" height="14" viewBox="0 0 14 14" fill="none">
